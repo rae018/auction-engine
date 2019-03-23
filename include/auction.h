@@ -22,6 +22,8 @@ limitations under the License.
 #include <vector>
 #include <stdint.h>
 
+namespace auction_engine {
+
 /**
  * \brief Auction class
  *
@@ -92,7 +94,7 @@ public:
    * \return \c true if the item was successfulled opened for auction, \c false
    * otherwise.
    */
-  bool openItemForBidding(Item* item);
+  bool openItemForBidding(Item& item);
 
   /**
    * \brief Close an open item for bidding.
@@ -110,14 +112,16 @@ public:
    *
    * \return \c true of the item was successfully closed, \c false otherwise.
    */
-   bool closeItemForBidding(Item* item, bool sell=false);
+  bool closeItemForBidding(Item& item, bool sell=false);
 
 protected:
-  std::vector<Item*> items;                ///< Items registered in the auction.
-  std::vector<Item*> open_bidding_items;   ///< Items currently open for bidding.
-  std::vector<User*> users;                ///< Users Registered in the auction.
+  std::vector<Item*> items;               ///< Items registered in the auction.
+  std::vector<Item*> open_bidding_items;  ///< Items currently open for bidding.
+  std::vector<User*> users;               ///< Users Registered in the auction.
   uint32_t item_id_counter;               ///< Counter for assigning item ids.
   uint32_t user_id_counter;               ///< Counter for assigning user ids.
   uint32_t revenue;                       ///< Total revenue of the auction.
 };
+
+}  // namespace auction_engine
 

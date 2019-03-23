@@ -1,4 +1,4 @@
-/* Copyright 2019 Reed Evans. All Rights Reserved.                                                  
+/* Copyright [yyyy] [name of copyright owner]                                                       
                                                                                     
 Licensed under the Apache License, Version 2.0 (the "License");                     
 you may not use this file except in compliance with the License.                    
@@ -15,28 +15,46 @@ limitations under the License.
 
 #pragma once
 
-#include <user.h>
-#include <stdint.h>
+#include <error_codes.h>
+#include <string>
 
 namespace auction_engine {
 
 /**
- * \brief Bid data structure.
+ * \brief Status class for returning error codes.
  *
- * This data structure records all information related to a bid in the auction.
+ * This class stores information related to error codes returned for certain
+ * operations. 
  */
-struct Bid {
-  /// Value of the bid.
-  uint32_t value;
+class Status {
+public:
+  /// Constructor for successful status
+  Status() {}
 
-  /// User that placed the bid.
-  User *owner;
+  /// Returns \c true if status contains no error, \c false otherwise.
+  bool ok() const { return state == NULL; }
 
-  /// Item the bid was placed on.
-  Item item;
+  /// Constructor for status with error code and message.
+  Status(auction_engine::error::Code code, std::string msg);
 
-  /// Number of the bid for the item it was placed on.
-  uint16_t number;
+  /// Returns the status error code
+  auction_engine::error::Code code() const {
+    return ok() ? auction_engine::error::OK : state->code;
+  }
+
+  /// Returns the status error message
+  std::string error_message() const {
+    return ok() ? std::string() : state->msg;
+  }
+  
+
+private:
+  // This state is NULL if there is no error (error::Code == OK) signifying an 
+  // OK status. Otherwise it contains the error code and message.
+  struct State {
+    auction_engine::error::Code code;
+    std::string msg;
+  } *state;
 };
 
 }  // namespace auction_engine

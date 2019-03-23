@@ -21,6 +21,8 @@ limitations under the License.
 #include <vector>
 #include <stdint.h>
 
+namespace auction_engine {
+
 /* Forward Declarations */
 struct Bid;
 class Item;
@@ -63,12 +65,14 @@ public:
    *
    * \return \c true if the bid was successfully placed, \c false otherwise.
    */
-	bool placeBid(Item* item, uint32_t value);
+	bool placeBid(Item& item, uint32_t value);
 
 protected:
   const uint32_t id;                ///< Id of user.
   std::string name;                 ///< Name of user.
   uint32_t funds;                   ///< Total funds available to the user. 
-  std::vector<Bid*> bids_placed;     ///< Bids the user has placed.
-  std::vector<Item*> items_bid_on;   ///< Items user has bid on.
+  std::vector<Bid*> bids_placed;    ///< Bids the user has placed.
+  std::vector<Item*> items_bid_on;  ///< Items user has bid on.
 };
+
+}  // namespace auction_engine

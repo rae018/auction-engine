@@ -21,6 +21,8 @@ limitations under the License.
 #include <vector>
 #include <stdint.h>
 
+namespace auction_engine {
+
 /* Forward Declarations */
 struct Bid;
 class User;
@@ -51,19 +53,19 @@ public:
   const uint32_t getStartingValue() const { return starting_value; }
 
   /**
-   * \brief Adds a bid to the item.
+   * \brief Adds a bid to the item. Assume \c bid is a valid bid.
    *
    * \param Bid
-   *    The bid to place on the item
-   *
-   * \return \c true if the bid was successfully placed, \c false otherwise.
+   *    The bid to place on the item 
    */
-  bool addBid(Bid* bid);
+  void addBid(Bid& bid);
 
 protected:
   const uint32_t id;          ///< Id of item.
   std::string name;           ///< Name of item.
-  std::vector<Bid*> bids;      ///< All bids placed on the item.
+  std::vector<Bid*> bids;     ///< All bids placed on the item.
   uint32_t starting_value;    ///< Starting value of item.
   bool sold;                  ///< Whether the item is sold or not.
 };
+
+}  // namespace auction_engine

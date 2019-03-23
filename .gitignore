@@ -1,6 +1,5 @@
 .DS_Store
 .git/
-CMakeFiles/
 Doxyfile
 docs/
 build/*
