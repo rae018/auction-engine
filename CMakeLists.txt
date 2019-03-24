@@ -14,6 +14,7 @@ add_executable(auction_engine
   include/error.h
   include/error_codes.h
   include/item.h
+  include/print.h
   include/status.h
   include/user.h
 
@@ -21,6 +22,7 @@ add_executable(auction_engine
   src/auction.cpp
   src/full_test.cpp
   src/item.cpp
+  src/print.cpp
   src/status.cpp
   src/user.cpp
 )

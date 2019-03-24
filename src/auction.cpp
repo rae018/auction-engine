@@ -26,8 +26,6 @@ limitations under the License.
 
 namespace auction_engine {
 
-// TODO: Fill in all of these function defs
-
 bool Auction::isRegistered(User& user) {
   std::vector<User*>::iterator it = std::find(users.begin(), users.end(),
       &user);

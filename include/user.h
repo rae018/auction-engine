@@ -50,6 +50,9 @@ public:
 	/// Return the user's bids.
 	std::vector<Bid*> getBids() const { return bids_placed; }
 
+  /// Return the user's available funds.
+  uint32_t getFunds() const { return funds; }
+
   /// Return all items the user has bid on.
   std::vector<Item*> getItemsBidOn() const { return items_bid_on; }
 

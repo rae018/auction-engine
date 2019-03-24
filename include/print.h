@@ -11,16 +11,31 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.            
 See the License for the specific language governing permissions and                 
 limitations under the License.                                                      
-==============================================================================*/
+==============================================================================*/   
 
-#include <auction.h>
+#pragma once
+
 #include <bid.h>
-#include <error.h>
 #include <item.h>
-#include <print.h>
-#include <status.h>
 #include <user.h>
+#include <vector>
 
-int main() {
-  return 0;
-}
+namespace auction_engine {
+
+namespace print {
+  
+void printBid(Bid& bid);
+
+void printItem(Item& item);
+
+void printUser(User& user);
+
+void printBidList(std::vector<Bid*> bids);
+
+void printItemList(std::vector<Item*> items);
+
+void printUserList(std::vector<User*> users);
+
+}  // namespace print
+
+}  // namespace auction_engine
