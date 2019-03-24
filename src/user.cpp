@@ -78,11 +78,9 @@ Status User::placeBid(Item& item, uint32_t value) {
   Bid bid(value, *this, item);
 
   // Add bid to user's placed bids, sorting by item id and bid value.
-  bids_placed.push_back(bids_placed.back());
   addBid(bid);
 
   // Add item to user's items bid on
-  items_bid_on.push_back(items_bid_on.back());
   addItem(item);
 
   // Add bid to item's bids
