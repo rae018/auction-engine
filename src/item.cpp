@@ -24,8 +24,4 @@ limitations under the License.
 
 namespace auction_engine {
 
-void Item::addBid(Bid& bid) {
-  bids.push_back(&bid);
-}
-
 }  // namespace auction_engine

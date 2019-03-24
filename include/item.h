@@ -53,7 +53,12 @@ public:
   bool isSold() const { return sold; }
 
   /// Return the current bid on the item.
-  Bid* getCurrentBid() const { return bids.back(); }
+  Bid* getCurrentBid() const { 
+    if (bids.back())
+      return bids.back();
+    else
+      return nullptr;
+  }
 
   /// Return the starting value of the item.
   const uint32_t getStartingValue() const { return starting_value; }
@@ -64,7 +69,7 @@ public:
    * \param Bid
    *    The bid to place on the item 
    */
-  void addBid(Bid& bid);
+  void addBid(Bid& bid) { bids.push_back(&bid); }
 
 protected:
   const uint32_t id;          ///< Id of item.

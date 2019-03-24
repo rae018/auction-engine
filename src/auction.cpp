@@ -25,6 +25,8 @@ limitations under the License.
 
 namespace auction_engine {
 
+// TODO: Fill in all of these function defs
+
 bool Auction::isRegistered(User& user) const {
   return true;
 }
@@ -35,6 +37,22 @@ bool Auction::isRegistered(Item& item) const {
 
 bool Auction::isOpen(Item& item) const {
   return true;
+}
+
+Status Auction::addItem(std::string name, uint32_t starting_value) {
+  return Status();
+}
+
+Status Auction::addUser(std::string name, uint32_t funds) {
+  return Status();
+}
+
+Status openItemForBidding(Item& item) {
+  return Status();
+}
+
+Status closeItemForBidding(Item& item, bool sell=false) {
+  return Status();
 }
 
 }  // namespace auction_engine

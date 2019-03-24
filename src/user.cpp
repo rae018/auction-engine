@@ -68,10 +68,14 @@ Status User::placeBid(Item& item, uint32_t value) {
         item.getName(), " is not currently open in the auction.");
   }
 
-  if (value <= current_bid->value) {
+  if (current_bid && value <= current_bid->value) {
     return error::InvalidBid("Attempted bid value ",
         value, " is not higher than the current bid value ",
         current_bid->value, " .");
+  } else if (value < item.getStartingValue()) {
+    return error::InvalidBid("Attempted bid value ",
+        value, " is not higher than the starting bid value ",
+        item.getStartingValue(), " .");
   }
   
   // Create bid
@@ -83,7 +87,8 @@ Status User::placeBid(Item& item, uint32_t value) {
   // Add item to user's items bid on
   addItem(item);
 
-  // Add bid to item's bids
+  // Place bid on item.
+  item.addBid(bid);
 
 
   return Status();

@@ -50,14 +50,31 @@ public:
 	/// Return the user's bids.
 	std::vector<Bid*> getBids() const { return bids_placed; }
 
-  /// Add a bid to the user's placed bids, sorting by item id and bid value.
-  void addBid(Bid& bid);
-
   /// Return all items the user has bid on.
   std::vector<Item*> getItemsBidOn() const { return items_bid_on; }
 
-  /// Add an item the user's items bid on, sorting by item id.
+  /**
+   * \brief Add an item to the user's items bid on.
+   *
+   * This adds an item to the user's \c items_bid_on member. Items are ordered
+   * such that they are ordered by their id.
+   *
+   * \param item
+   *    The item to add.
+   */
   void addItem(Item& item);
+
+  /**
+   * \brief Add a bid to the user's placed bids.
+   *
+   * This adds a bid to the user's \c placed_bids member. The bids are inserted
+   * such that they are sorted by their item's id and bid value.
+   *
+   * \param bid
+   *    The bid to add.
+   */
+  void addBid(Bid& bid);
+
 
 	/**
 	 * \brief Place a bid on an item.
