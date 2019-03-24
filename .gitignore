@@ -4,3 +4,4 @@ Doxyfile
 docs/
 build/*
 !build/Makefile
+*.swp
