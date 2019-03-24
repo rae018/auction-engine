@@ -13,35 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.                                                      
 ==============================================================================*/
 
-#pragma once
-
-#include <user.h>
-#include <stdint.h>
+#include <status.h>
 
 namespace auction_engine {
 
-/**
- * \brief Bid data structure.
- *
- * This data structure records all information related to a bid in the auction.
- */
-struct Bid {
-
-  /// Create bid.
-  Bid(uint32_t value, User& user, Item& item)
-      : value(value), owner(user), item(item) {}
-
-  /// Value of the bid.
-  uint32_t value;
-
-  /// User that placed the bid.
-  User& owner;
-
-  /// Item the bid was placed on.
-  Item& item;
-
-  /// Number of the bid for the item it was placed on.
-  uint16_t number;
-};
+Status::Status(auction_engine::error::Code code, std::string msg) {
+  state->code = code;
+  state->msg = msg;
+}
 
 }  // namespace auction_engine

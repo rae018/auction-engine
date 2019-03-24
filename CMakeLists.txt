@@ -21,5 +21,6 @@ add_executable(auction_engine
   src/auction.cpp
   src/full_test.cpp
   src/item.cpp
+  src/status.cpp
   src/user.cpp
 )

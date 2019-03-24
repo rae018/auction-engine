@@ -23,5 +23,19 @@ limitations under the License.
 #include <vector>
 #include <stdint.h>
 
+namespace auction_engine {
 
+bool Auction::isRegistered(User& user) const {
+  return true;
+}
+
+bool Auction::isRegistered(Item& item) const {
+  return true;
+}
+
+bool Auction::isOpen(Item& item) const {
+  return true;
+}
+
+}  // namespace auction_engine
 

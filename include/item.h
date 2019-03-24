@@ -17,6 +17,7 @@ limitations under the License.
 
 #include <bid.h>
 #include <user.h>
+#include <auction.h>
 #include <string>
 #include <vector>
 #include <stdint.h>
@@ -26,6 +27,7 @@ namespace auction_engine {
 /* Forward Declarations */
 struct Bid;
 class User;
+class Auction;
 
 /**
  * \brief Item class.
@@ -34,14 +36,18 @@ class User;
  */
 class Item {
 public:
-  Item(uint32_t id, std::string name, uint32_t starting_value=0)
-      : id(id), name(name), starting_value(starting_value) {}
+  Item(Auction& auction, uint32_t id, std::string name, 
+      uint32_t starting_value=0)
+      : auction(auction), id(id), name(name), starting_value(starting_value) {}
 
   /// Return all bids placed on the item.
   std::vector<Bid*> getBids() const { return bids; }
 
   /// Return the item's id.
   const uint32_t getId() const { return id; }
+
+  /// Return the item's name.
+  const std::string getName() const { return name; }
 
   /// Return whether the item has sold or not.
   bool isSold() const { return sold; }
@@ -66,6 +72,7 @@ protected:
   std::vector<Bid*> bids;     ///< All bids placed on the item.
   uint32_t starting_value;    ///< Starting value of item.
   bool sold;                  ///< Whether the item is sold or not.
+  Auction& auction;           ///< The auction this item is a part of.
 };
 
 }  // namespace auction_engine

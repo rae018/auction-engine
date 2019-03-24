@@ -17,6 +17,8 @@ limitations under the License.
 
 #include <bid.h>
 #include <item.h>
+#include <auction.h>
+#include <status.h>
 #include <string>
 #include <vector>
 #include <stdint.h>
@@ -26,6 +28,7 @@ namespace auction_engine {
 /* Forward Declarations */
 struct Bid;
 class Item;
+class Auction;
 
 /**
  * \brief User class.
@@ -35,17 +38,26 @@ class Item;
  */
 class User {
 public:
-  User(uint32_t id, std::string name, uint32_t funds=0)
-      : id(id), name(name), funds(funds) {}
+  User(Auction& auction, uint32_t id, std::string name, uint32_t funds=0)
+      : auction(auction), id(id), name(name), funds(funds) {}
 
 	/// Return the user's id.
 	const uint32_t getId() const { return id; }
 
+  /// Return the user's name.
+  const std::string getName() const { return name; }
+
 	/// Return the user's bids.
 	std::vector<Bid*> getBids() const { return bids_placed; }
 
+  /// Add a bid to the user's placed bids, sorting by item id and bid value.
+  void addBid(Bid& bid);
+
   /// Return all items the user has bid on.
   std::vector<Item*> getItemsBidOn() const { return items_bid_on; }
+
+  /// Add an item the user's items bid on, sorting by item id.
+  void addItem(Item& item);
 
 	/**
 	 * \brief Place a bid on an item.
@@ -57,15 +69,15 @@ public:
    * the auction, if the item is not the currently open for bidding in the
    * auction, if the \c value passed is not higher than the current bid on
    * the item, of if the \c value passed is greater than the user's available
-   * funds, an exception is thrown and the function returns \c false.
-   *
+   * funds, the return \c Status will contain an error code and message.
+   * 
    * \param value
    *    An \c uint32_t specifying the value of the bid. If the bid is successful
    *    this value will be subtracted from the user's \c funds.
    *
    * \return \c true if the bid was successfully placed, \c false otherwise.
    */
-	bool placeBid(Item& item, uint32_t value);
+	Status placeBid(Item& item, uint32_t value);
 
 protected:
   const uint32_t id;                ///< Id of user.
@@ -73,6 +85,7 @@ protected:
   uint32_t funds;                   ///< Total funds available to the user. 
   std::vector<Bid*> bids_placed;    ///< Bids the user has placed.
   std::vector<Item*> items_bid_on;  ///< Items user has bid on.
+  Auction& auction;                 ///< The \c Auction this user is a part of.
 };
 
 }  // namespace auction_engine

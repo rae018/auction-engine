@@ -31,7 +31,10 @@ namespace error {
   INVALID_BID,                                                                      
                                                                                     
   // Reference to item or user not registered in auction was made                   
-  NOT_FOUND,                                                                        
+  NOT_FOUND,      
+
+  // Item is not open for bidding
+  ITEM_CLOSED,
                                                                                     
   // Item or user registered with name that is already in use.                      
   NAME_TAKEN                                                                        

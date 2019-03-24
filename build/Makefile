@@ -204,6 +204,33 @@ src/item.cpp.s:
 	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/item.cpp.s
 .PHONY : src/item.cpp.s
 
+src/status.o: src/status.cpp.o
+
+.PHONY : src/status.o
+
+# target to build an object file
+src/status.cpp.o:
+	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/status.cpp.o
+.PHONY : src/status.cpp.o
+
+src/status.i: src/status.cpp.i
+
+.PHONY : src/status.i
+
+# target to preprocess a source file
+src/status.cpp.i:
+	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/status.cpp.i
+.PHONY : src/status.cpp.i
+
+src/status.s: src/status.cpp.s
+
+.PHONY : src/status.s
+
+# target to generate assembly for a file
+src/status.cpp.s:
+	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/status.cpp.s
+.PHONY : src/status.cpp.s
+
 src/user.o: src/user.cpp.o
 
 .PHONY : src/user.o
@@ -249,6 +276,9 @@ help:
 	@echo "... src/item.o"
 	@echo "... src/item.i"
 	@echo "... src/item.s"
+	@echo "... src/status.o"
+	@echo "... src/status.i"
+	@echo "... src/status.s"
 	@echo "... src/user.o"
 	@echo "... src/user.i"
 	@echo "... src/user.s"

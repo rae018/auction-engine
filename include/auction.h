@@ -16,6 +16,7 @@ limitations under the License.
 #pragma once
 
 #include <bid.h>
+#include <status.h>
 #include <item.h>
 #include <user.h>
 #include <string>
@@ -23,6 +24,11 @@ limitations under the License.
 #include <stdint.h>
 
 namespace auction_engine {
+
+/* Forward Declarations  */
+struct Bid;
+class User;
+class Item;
 
 /**
  * \brief Auction class
@@ -37,6 +43,20 @@ public:
   /// Return all items registered in the auction.
   std::vector<Item*> getItems() const { return items; }
 
+  /// Return all items open in the auction.
+  std::vector<Item*> getOpenItems() const { return open_items; }
+
+  /// Returns \c true if \c item is registered in the auction, \c false 
+  /// otherwise.
+  bool isRegistered(Item& item) const;
+
+  /// Returns \c true if \c user is registered with the auction, \c false
+  /// otherwise.
+  bool isRegistered(User& user) const;
+
+  /// Returns \c true if \c item is open in the auction, \c false otherwise.
+  bool isOpen(Item& item) const;
+
   /// Return all users registered in the auction.
   std::vector<User*> getUsers() const { return users; }
 
@@ -45,9 +65,9 @@ public:
    *
    *  This registers a new item in with auction. The item's \c name and 
    *  (optional) \c starting_value are passed as parameters. If the \c name 
-   *  passed is already in use by another item in the auction, an exception is 
-   *  thrown and the function returns \c false. The item's \c id is assigned 
-   *  using the class's \c item_id_counter. 
+   *  passed is already in use by another item in the auction, the return \c 
+   *  Status will contain an error code and message. The item's \c id is 
+   *  assigned using the class's \c item_id_counter. 
    *
    * \param name
    *    A \c string specifying the name of the item.
@@ -56,17 +76,17 @@ public:
    *    An optional \c uint23_t specifying the value bidding will start at for 
    *    the item. Defaults to 0.
    *
-   * \return \c true if the item was added successfully, \c false otherwise.
+   * \return \c Status containing error code and message.
    */
-  bool addItem(std::string name, uint32_t starting_value=0);
+  Status addItem(std::string name, uint32_t starting_value=0);
 
   /**
    * \brief Add a user to the auction
    *
    * This registers a new user with the auction. The user's \c name and
    * (optional) \c funds are passed as parameters. If the \c name passed is
-   * already in use by another user in the auction, an exception is thrown and
-   * the funtion returns \c false. The user's \c id is assigned using the
+   * already in use by another user in the auction, the return \c Status will 
+   * contain an error code and message. The user's \c id is assigned using the
    * class's \c user_id_counter. 
    *
    * \param name
@@ -76,9 +96,9 @@ public:
    *    An optional uint32_t specifying the amount of funds to initialize the
    *    user with. Defaults to 0.
    *
-   * \return \c true if the user was added successfully, \c false otherwise.
+   * \return \c Status containing error code and message.
    */
-  bool addUser(std::string name, uint32_t funds=0);
+  Status addUser(std::string name, uint32_t funds=0);
 
   /**
    * \brief Open a registered item for bidding.
@@ -86,21 +106,20 @@ public:
    * This opens a registered item in the auction for bidding. Bids cannot be
    * placed on an item unless it is open. If the item is not registered in the
    * auction, if the item is already open, or if the item has already been sold, 
-   * an exception is thrown and the function returns \c false. 
+   * the return \c Status will contain an error code and message.
    *
    * \param item
    *    An \c Item to open for auction. 
    *
-   * \return \c true if the item was successfulled opened for auction, \c false
-   * otherwise.
+   * \return \c Status containing error code and message.
    */
-  bool openItemForBidding(Item& item);
+  Status openItemForBidding(Item& item);
 
   /**
    * \brief Close an open item for bidding.
    *
-   * This closes an open item for bidding. If the item is not already open, an
-   * exception is thrown and the function returns \c false.
+   * This closes an open item for bidding. If the item is not already open, 
+   * the return \c Status will contain an error code and message.
    *
    * \param item
    *    An \c Item that is currently open to close for bidding. 
@@ -110,13 +129,14 @@ public:
    *    closing or not. If the item is sold it's selling value is added to the
    *    auction revenue. Defaults to \c false.
    *
-   * \return \c true of the item was successfully closed, \c false otherwise.
+   * \return \c Status containing error code and message.
    */
-  bool closeItemForBidding(Item& item, bool sell=false);
-
+  Status closeItemForBidding(Item& item, bool sell=false);
+  
+  
 protected:
   std::vector<Item*> items;               ///< Items registered in the auction.
-  std::vector<Item*> open_bidding_items;  ///< Items currently open for bidding.
+  std::vector<Item*> open_items;          ///< Items currently open for bidding.
   std::vector<User*> users;               ///< Users Registered in the auction.
   uint32_t item_id_counter;               ///< Counter for assigning item ids.
   uint32_t user_id_counter;               ///< Counter for assigning user ids.
