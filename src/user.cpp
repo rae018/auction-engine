@@ -25,7 +25,7 @@ limitations under the License.
 namespace auction_engine {
 
 void User::addBid(Bid& bid) {
-  bids_placed.push_back(bids_placed.back());
+  bids_placed.push_back(&bid);
   for (int i=bids_placed.size(); i>0; --i) {
     Item cur_item = bids_placed[i-1]->item;
     if (cur_item.getId() > bid.item.getId()) {
@@ -38,7 +38,7 @@ void User::addBid(Bid& bid) {
 }
 
 void User::addItem(Item& item) {
-  items_bid_on.push_back(items_bid_on.back());
+  items_bid_on.push_back(&item);
   for (int i=items_bid_on.size(); i>0; --i) {
     if (items_bid_on[i-1]->getId() > item.getId()) {
       items_bid_on[i] = items_bid_on[i-1];
@@ -59,13 +59,13 @@ Status User::placeBid(Item& item, uint32_t value) {
   }
 
   if (!auction.isRegistered(item)) {
-    return error::NotFound("Item ",
-        item.getName(), " is not registered in the auction.");
+    return error::NotFound("Item \"",
+        item.getName(), "\" is not registered in the auction.");
   }
 
   if (!auction.isOpen(item)) {
-    return error::ItemClosed("Item ",
-        item.getName(), " is not currently open in the auction.");
+    return error::ItemUnavailable("Item \"",
+        item.getName(), "\" is not currently open in the auction.");
   }
 
   if (current_bid && value <= current_bid->value) {

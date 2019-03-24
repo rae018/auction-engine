@@ -78,15 +78,15 @@ inline bool IsNotFound(::auction_engine::Status& status) {
   return status.code() == ::auction_engine::error::NOT_FOUND;
 }
 
-/// Function to create \c ITEM_CLOSED error status.
+/// Function to create \c ITEM_UNAVAILABLE error status.
 template <typename... Args>
-::auction_engine::Status ItemClosed(Args... args) {
-  return ::auction_engine::Status(::auction_engine::error::ITEM_CLOSED,
+::auction_engine::Status ItemUnavailable(Args... args) {
+  return ::auction_engine::Status(::auction_engine::error::ITEM_UNAVAILABLE,
       concatArgs(args...));
 }
-/// Function to test whether error status has code \c ITEM_CLOSED.
-inline bool IsItemClosed(::auction_engine::Status& status) {
-  return status.code() == ::auction_engine::error::ITEM_CLOSED;
+/// Function to test whether error status has code \c ITEM_UNAVAILABLE.
+inline bool IsItemUnavailable(::auction_engine::Status& status) {
+  return status.code() == ::auction_engine::error::ITEM_UNAVAILABLE;
 }
 
 /// Function to create \c NAME_TAKEN error status.

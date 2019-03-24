@@ -21,37 +21,116 @@ limitations under the License.
 #include <status.h>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <stdint.h>
 
 namespace auction_engine {
 
 // TODO: Fill in all of these function defs
 
-bool Auction::isRegistered(User& user) const {
-  return true;
+bool Auction::isRegistered(User& user) {
+  std::vector<User*>::iterator it = std::find(users.begin(), users.end(),
+      &user);
+  if (it != users.end())
+    return true;
+  else
+    return false;
 }
 
-bool Auction::isRegistered(Item& item) const {
-  return true;
+bool Auction::isRegistered(Item& item) {
+  std::vector<Item*>::iterator it = std::find(items.begin(), items.end(),
+      &item);
+  if (it != items.end())
+    return true;
+  else
+    return false;
 }
 
-bool Auction::isOpen(Item& item) const {
-  return true;
+bool Auction::isOpen(Item& item) {
+  std::vector<Item*>::iterator it = std::find(open_items.begin(),
+      open_items.end(), &item);
+  if (it != open_items.end())
+    return true;
+  else
+    return false;
 }
 
 Status Auction::addItem(std::string name, uint32_t starting_value) {
+  for (Item* item: items) {
+    if (name == item->getName()) {
+      return error::NameTaken("An item with name \"", 
+          name, "\"already exists.");
+    }
+  }
+
+  // Create and add item
+  Item new_item(*this, item_id_counter++, name, starting_value);
+  items.push_back(&new_item);
+
   return Status();
 }
 
 Status Auction::addUser(std::string name, uint32_t funds) {
+  for (User* user: users) {
+    if (name == user->getName()) {
+      return error::NameTaken("A user with name \"",
+          name, "\"already exists.");
+    }
+  }
+
+  // Create and add user
+  User new_user(*this, user_id_counter++, name, funds);
+  users.push_back(&new_user);
+
   return Status();
 }
 
-Status openItemForBidding(Item& item) {
+Status Auction::openItemForBidding(Item& item) {
+  // Check if item is registered, return NOT_FOUND if not
+  if (!isRegistered(item)) {
+    return error::NotFound("Item \"",
+        item.getName(), "\" is not registered in the auction.");
+  }
+
+  // Check if item is sold, return ITEM_UNAVAILABLE if not
+  if (item.isSold()) {
+    return error::ItemUnavailable("Item \"",
+        item.getName(), "\" has been sold.");
+  }
+
+  // Check if item is already open, if not add it.
+  if (!isOpen(item))
+    open_items.push_back(&item);
+
   return Status();
 }
 
-Status closeItemForBidding(Item& item, bool sell=false) {
+Status Auction::closeItemForBidding(Item& item, bool sell) {
+  // Check if item is registered, return NOT_FOUND if not
+  if (!isRegistered(item)) {
+    return error::NotFound("Item \"",
+        item.getName(), "\" is not registered in the auction.");
+  }
+
+  // If item is open, find it in open items, sell it, and close it
+  if (isOpen(item)) {
+    std::vector<Item*>::iterator it = std::find(open_items.begin(),
+        open_items.end(), &item);
+    open_items.erase(it);
+  } else {
+    // Item is closed. Return error code if trying to sell a sold item
+    if (sell && item.isSold()) {
+      return error::ItemUnavailable("Item \"",
+          item.getName(), "\" has been sold.");
+    }
+  }
+
+  // Item is not sold. Sell if specified.
+  if (sell) {
+    item.sell();
+    revenue += item.getCurrentBid()->value;
+  }
+
   return Status();
 }
 

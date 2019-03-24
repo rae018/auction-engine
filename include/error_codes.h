@@ -34,7 +34,7 @@ namespace error {
   NOT_FOUND,      
 
   // Item is not open for bidding
-  ITEM_CLOSED,
+  ITEM_UNAVAILABLE,
                                                                                     
   // Item or user registered with name that is already in use.                      
   NAME_TAKEN                                                                        

@@ -48,14 +48,14 @@ public:
 
   /// Returns \c true if \c item is registered in the auction, \c false 
   /// otherwise.
-  bool isRegistered(Item& item) const;
+  bool isRegistered(Item& item);
 
   /// Returns \c true if \c user is registered with the auction, \c false
   /// otherwise.
-  bool isRegistered(User& user) const;
+  bool isRegistered(User& user);
 
   /// Returns \c true if \c item is open in the auction, \c false otherwise.
-  bool isOpen(Item& item) const;
+  bool isOpen(Item& item);
 
   /// Return all users registered in the auction.
   std::vector<User*> getUsers() const { return users; }
@@ -63,7 +63,7 @@ public:
   /**
    * \brief Add an item to the auction.
    *
-   *  This registers a new item in with auction. The item's \c name and 
+   *  This registers a new \c Item in with auction. The item's \c name and 
    *  (optional) \c starting_value are passed as parameters. If the \c name 
    *  passed is already in use by another item in the auction, the return \c 
    *  Status will contain an error code and message. The item's \c id is 
@@ -83,7 +83,7 @@ public:
   /**
    * \brief Add a user to the auction
    *
-   * This registers a new user with the auction. The user's \c name and
+   * This registers a new \c User with the auction. The user's \c name and
    * (optional) \c funds are passed as parameters. If the \c name passed is
    * already in use by another user in the auction, the return \c Status will 
    * contain an error code and message. The user's \c id is assigned using the
@@ -103,10 +103,11 @@ public:
   /**
    * \brief Open a registered item for bidding.
    *
-   * This opens a registered item in the auction for bidding. Bids cannot be
+   * This opens a registered \c Item in the auction for bidding. Bids cannot be
    * placed on an item unless it is open. If the item is not registered in the
-   * auction, if the item is already open, or if the item has already been sold, 
-   * the return \c Status will contain an error code and message.
+   * auction, or if the item has already been sold, 
+   * the return \c Status will contain an error code and message. If the item is
+   * already open, the function just returns with an OK status.
    *
    * \param item
    *    An \c Item to open for auction. 
@@ -118,7 +119,7 @@ public:
   /**
    * \brief Close an open item for bidding.
    *
-   * This closes an open item for bidding. If the item is not already open, 
+   * This closes an open \c Item for bidding. If the item is not already open, 
    * the return \c Status will contain an error code and message.
    *
    * \param item
@@ -132,8 +133,7 @@ public:
    * \return \c Status containing error code and message.
    */
   Status closeItemForBidding(Item& item, bool sell=false);
-  
-  
+
 protected:
   std::vector<Item*> items;               ///< Items registered in the auction.
   std::vector<Item*> open_items;          ///< Items currently open for bidding.

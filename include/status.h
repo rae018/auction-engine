@@ -54,7 +54,8 @@ private:
   struct State {
     auction_engine::error::Code code;
     std::string msg;
-  } *state;
+  };
+  std::unique_ptr<State> state;
 };
 
 }  // namespace auction_engine

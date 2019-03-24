@@ -52,6 +52,9 @@ public:
   /// Return whether the item has sold or not.
   bool isSold() const { return sold; }
 
+  /// Mark the item as sold.
+  void sell() { sold = true; }
+
   /// Return the current bid on the item.
   Bid* getCurrentBid() const { 
     if (bids.back())
