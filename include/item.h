@@ -80,7 +80,7 @@ protected:
   std::vector<Bid*> bids;     ///< All bids placed on the item.
   uint32_t starting_value;    ///< Starting value of item.
   bool sold;                  ///< Whether the item is sold or not.
-  Auction& auction;           ///< The auction this item is a part of.
+  Auction& auction;           ///< The \c Auction this item is a part of.
 };
 
 }  // namespace auction_engine

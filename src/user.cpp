@@ -19,6 +19,7 @@ limitations under the License.
 #include <error.h>
 #include <status.h>
 #include <string>
+#include <map>
 #include <vector>
 #include <stdint.h>
 
@@ -27,8 +28,9 @@ namespace auction_engine {
 void User::addBid(Bid& bid) {
   bids_placed.push_back(&bid);
   for (int i=bids_placed.size(); i>0; --i) {
-    Item cur_item = bids_placed[i-1]->item;
-    if (cur_item.getId() > bid.item.getId()) {
+    uint32_t cur_item_id = bids_placed[i-1]->item_id;
+    std::unique_ptr<Item> const& cur_item = auction.getItem(cur_item_id);
+    if (cur_item->getId() > auction.getItem(bid.item_id)->getId()) {
       bids_placed[i] = bids_placed[i-1];
     } else {
       bids_placed[i] = &bid;
@@ -37,64 +39,17 @@ void User::addBid(Bid& bid) {
   }
 }
 
-void User::addItem(Item& item) {
-  items_bid_on.push_back(&item);
+void User::addItem(uint32_t item_id) {
+  items_bid_on.push_back(item_id);
   for (int i=items_bid_on.size(); i>0; --i) {
-    if (items_bid_on[i-1]->getId() > item.getId()) {
+    if (items_bid_on[i-1] > item_id) {
       items_bid_on[i] = items_bid_on[i-1];
     } else {
-      items_bid_on[i] = &item;
+      items_bid_on[i] = item_id;
       break;
     }
   }
 }
-
-
-Status User::placeBid(Item& item, uint32_t value) {
-  Bid* current_bid = item.getCurrentBid();
-
-  if (value > funds) {
-    return error::InsufficientFunds("Attempted bid value ",
-        value, " is greater than user's available funds.");
-  }
-
-  if (!auction.isRegistered(item)) {
-    return error::NotFound("Item \"",
-        item.getName(), "\" is not registered in the auction.");
-  }
-
-  if (!auction.isOpen(item)) {
-    return error::ItemUnavailable("Item \"",
-        item.getName(), "\" is not currently open in the auction.");
-  }
-
-  if (current_bid && value <= current_bid->value) {
-    return error::InvalidBid("Attempted bid value ",
-        value, " is not higher than the current bid value ",
-        current_bid->value, " .");
-  } else if (value < item.getStartingValue()) {
-    return error::InvalidBid("Attempted bid value ",
-        value, " is not higher than the starting bid value ",
-        item.getStartingValue(), " .");
-  }
-  
-  // Create bid
-  Bid bid(value, *this, item);
-
-  // Add bid to user's placed bids, sorting by item id and bid value.
-  addBid(bid);
-
-  // Add item to user's items bid on
-  addItem(item);
-
-  // Place bid on item.
-  item.addBid(bid);
-
-
-  return Status();
-
-}
-
 
 }  // namespace auction_engine
 

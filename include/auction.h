@@ -21,6 +21,7 @@ limitations under the License.
 #include <user.h>
 #include <string>
 #include <vector>
+#include <map>
 #include <stdint.h>
 
 namespace auction_engine {
@@ -41,24 +42,32 @@ public:
   Auction() : item_id_counter(0), user_id_counter(0), revenue(0) {} 
 
   /// Return all items registered in the auction.
-  std::vector<Item*> getItems() const { return items; }
+  std::vector<uint32_t> getItems();
 
   /// Return all items open in the auction.
-  std::vector<Item*> getOpenItems() const { return open_items; }
+  std::vector<uint32_t> const& getOpenItems() const { 
+    return open_items; 
+  }
 
   /// Returns \c true if \c item is registered in the auction, \c false 
   /// otherwise.
-  bool isRegistered(Item& item);
+  bool isItemRegistered(uint32_t item_id);
 
   /// Returns \c true if \c user is registered with the auction, \c false
   /// otherwise.
-  bool isRegistered(std::unique_ptr<User>& user);
+  bool isUserRegistered(uint32_t user_id);
 
   /// Returns \c true if \c item is open in the auction, \c false otherwise.
-  bool isOpen(Item& item);
+  bool isOpen(uint32_t item_id);
 
   /// Return all users registered in the auction.
-  std::vector<std::unique_ptr<User>> const& getUsers() const { return users; }
+  std::vector<uint32_t> getUsers();
+
+  /// Return a single user
+  std::unique_ptr<User> const& getUser(uint32_t user_id) { return users[user_id]; }
+
+  /// Return a single item
+  std::unique_ptr<Item> const& getItem(uint32_t item_id) { return items[item_id]; }
 
   /**
    * \brief Add an item to the auction.
@@ -114,7 +123,7 @@ public:
    *
    * \return \c Status containing error code and message.
    */
-  Status openItemForBidding(Item& item);
+  Status openItemForBidding(uint32_t item_id);
 
   /**
    * \brief Close an open item for bidding.
@@ -132,15 +141,39 @@ public:
    *
    * \return \c Status containing error code and message.
    */
-  Status closeItemForBidding(Item& item, bool sell=false);
+  Status closeItemForBidding(uint32_t item_id, bool sell=false);
+  
+  /**
+   * \brief Place a bid on an item.
+   *
+   * This places a bid on an item for a user. If the item is not registered in
+   * the auction, if the item is not the currently open for bidding in the
+   * auction, if the \c value passed is not higher than the current bid on
+   * the item, of if the \c value passed is greater than the user's available
+   * funds, the return \c Status will contain an error code and message.
+   *
+   * \param item_id
+   *    The id of the item to bid on.
+   *
+   * \param user_id
+   *    The id of the user placing the bid.
+   *
+   * \param value
+   *    An \c uint32_t specifying the value of the bid. If the bid is successful
+   *    this value will be subtracted from the user's \c funds.
+   *
+   * \return \c Status containing error code and message.
+   */
+  Status placeBid(uint32_t item_id, uint32_t user_id, uint32_t value);
 
 protected:
-  std::vector<Item*> items;               ///< Items registered in the auction.
-  std::vector<Item*> open_items;          ///< Items currently open for bidding.
-  std::vector<std::unique_ptr<User>> users;               ///< Users Registered in the auction.
+  std::map<uint32_t, std::unique_ptr<Item>> items;  ///< Items registered in the auction.
+  std::vector<uint32_t> open_items;       ///< Item IDs currently open for bidding.
+  std::map<uint32_t, std::unique_ptr<User>> users;         ///< Users Registered in the auction.
   uint32_t item_id_counter;               ///< Counter for assigning item ids.
   uint32_t user_id_counter;               ///< Counter for assigning user ids.
   uint32_t revenue;                       ///< Total revenue of the auction.
+  const int entry_width = 16;
 };
 
 }  // namespace auction_engine

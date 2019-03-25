@@ -41,28 +41,30 @@ inline void printLine(const int num_fields) {
 }
 
 
-void printBid(Bid& bid) {
+void printBid(Auction& auction, Bid& bid) {
+  std::unique_ptr<Item> const& item = auction.getItem(bid.item_id);
+  std::unique_ptr<User> const& user = auction.getUser(bid.user_id);
   std::cout << "{ Bid" << std::endl;
-  std::cout << "Item: " << bid.item.getName() << std::endl;
+  std::cout << "Item: " << item->getName() << std::endl;
   std::cout << "Number: " << bid.number << std::endl;
-  std::cout << "Owner: " << bid.owner.getName() << std::endl;
+  std::cout << "Owner: " << user->getName() << std::endl;
   std::cout << "Value: " << bid.value << std::endl;
   std::cout << "}" << std::endl;
 }
 
-void printItem(Item& item) {
+void printItem(std::unique_ptr<Item> const& item) {
   std::cout << "{ Item" << std::endl;
-  std::cout << "Name: " << item.getName() << std::endl;
-  std::cout << "ID: " << item.getId() << std::endl;
-  std::cout << "Number of bids: " << item.getBids().size() << std::endl;
+  std::cout << "Name: " << item->getName() << std::endl;
+  std::cout << "ID: " << item->getId() << std::endl;
+  std::cout << "Number of bids: " << item->getBids().size() << std::endl;
   std::cout << "Current bid value: ";
-  item.getCurrentBid() ? std::cout << item.getCurrentBid()->value
-      : std::cout << item.getStartingValue();
+  item->getCurrentBid() ? std::cout << item->getCurrentBid()->value
+      : std::cout << item->getStartingValue();
   std::cout << std::endl;
   std::cout << "}" << std::endl;
 }
 
-void printUser(std::unique_ptr<User>& user) {
+void printUser(std::unique_ptr<User> const& user) { 
   std::cout << "{ User" << std::endl;
   std::cout << "Name: " << user->getName() << std::endl;
   std::cout << "ID: " << user->getId() << std::endl;
@@ -72,7 +74,7 @@ void printUser(std::unique_ptr<User>& user) {
   std::cout << "}" << std::endl;
 }
 
-void printBidList(std::vector<Bid*> bids) {
+void printBidList(Auction& auction, std::vector<Bid*> bids) {
   printEntry("Item Name");
   printEntry("Bid Number");
   printEntry("Placed By");
@@ -80,22 +82,25 @@ void printBidList(std::vector<Bid*> bids) {
   std::cout << std::endl;
   printLine(4);
   for (Bid* bid: bids) {
-    printEntry(bid->item.getName());
+    std::unique_ptr<Item> const& item = auction.getItem(bid->item_id);
+    std::unique_ptr<User> const& user = auction.getUser(bid->user_id);
+    printEntry(item->getName());
     printEntry(bid->number);
-    printEntry(bid->owner.getName());
+    printEntry(user->getName());
     printEntry(bid->value);
     std::cout << std::endl;
   }
 }
 
-void printItemList(std::vector<Item*> items) {
+void printItemList(Auction& auction, std::vector<uint32_t> item_ids) {
   printEntry("Item Name");
   printEntry("Item ID");
   printEntry("Current Bid");
   printEntry("Sold?");
   std::cout << std::endl;
   printLine(4);
-  for (Item* item: items) {
+  for (auto const& item_id: item_ids) {
+    std::unique_ptr<Item> const& item = auction.getItem(item_id);
     printEntry(item->getName());
     printEntry(item->getId());
     printEntry(item->getCurrentBid()->value);
@@ -104,14 +109,15 @@ void printItemList(std::vector<Item*> items) {
   }
 }
 
-void printUserList(std::vector<std::unique_ptr<User>> const& users) {
+void printUserList(Auction& auction, std::vector<uint32_t> user_ids) {
   printEntry("User Name");
   printEntry("User ID");
   printEntry("Funds");
   printEntry("Items Bid On");
   std::cout << std::endl;
   printLine(4);
-  for (auto const& user: users) {
+  for (auto const& user_id: user_ids) {
+    std::unique_ptr<User> const& user = auction.getUser(user_id);
     printEntry(user->getName());
     printEntry(user->getId());
     printEntry(user->getFunds());

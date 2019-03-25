@@ -21,119 +21,176 @@ limitations under the License.
 #include <status.h>
 #include <string>
 #include <vector>
+#include <map>
 #include <algorithm>
+#include <memory>
 #include <stdint.h>
+#include <iomanip>
+#include <iostream>
 
 namespace auction_engine {
 
-bool Auction::isRegistered(std::unique_ptr<User>& user) {
-  std::vector<std::unique_ptr<User>>::iterator it = std::find(users.begin(),
-      users.end(), user);
-  if (it != users.end())
+bool Auction::isUserRegistered(uint32_t user_id) {
+  if (users.count(user_id))
     return true;
   else
     return false;
 }
 
-bool Auction::isRegistered(Item& item) {
-  std::vector<Item*>::iterator it = std::find(items.begin(), items.end(),
-      &item);
-  if (it != items.end())
+bool Auction::isItemRegistered(uint32_t item_id) {
+  if (items.count(item_id))
     return true;
   else
     return false;
 }
 
-bool Auction::isOpen(Item& item) {
-  std::vector<Item*>::iterator it = std::find(open_items.begin(),
-      open_items.end(), &item);
+bool Auction::isOpen(uint32_t item_id) {
+  std::vector<uint32_t>::iterator it = std::find(
+      open_items.begin(), open_items.end(), item_id);
   if (it != open_items.end())
     return true;
   else
     return false;
 }
 
+std::vector<uint32_t> Auction::getItems() {
+  std::vector<uint32_t> item_id_vec;
+  for (auto it=items.begin(); it!=items.end(); ++it)
+    item_id_vec.push_back(it->first);
+  return item_id_vec;
+}
+
+std::vector<uint32_t> Auction::getUsers() {
+  std::vector<uint32_t> user_id_vec;
+  for (auto it=users.begin(); it!=users.end(); ++it)
+    user_id_vec.push_back(it->first);
+  return user_id_vec;
+}
+
 Status Auction::addItem(std::string name, uint32_t starting_value) {
-  for (Item* item: items) {
-    if (name == item->getName()) {
+  for (auto const& kv: items) {
+    if (name == kv.second->getName()) {
       return error::NameTaken("An item with name \"", 
           name, "\"already exists.");
     }
   }
 
   // Create and add item
-  Item new_item(*this, item_id_counter++, name, starting_value);
-  items.push_back(&new_item);
+  items[item_id_counter] = std::make_unique<Item>(*this, item_id_counter++,
+      name, starting_value);
 
   return Status();
 }
 
 Status Auction::addUser(std::string name, uint32_t funds) {
-  for (auto const& user: users) {
-    if (name == user->getName()) {
+  for (auto const& kv: users) {
+    if (name == kv.second->getName()) {
       return error::NameTaken("A user with name \"",
           name, "\"already exists.");
     }
   }
 
   // Create and add user
-  //User* new_user = new User(*this, user_id_counter++, name, funds);
-  //std::shared_ptr<User> new_user = std::make_shared<User>(*this, 
-  //    user_id_counter++, name, funds);
-  std::unique_ptr<User> new_user(new User(*this, user_id_counter++, name,
-      funds));
-  users.push_back(std::move(new_user));
+  users[user_id_counter] = std::make_unique<User>(*this, user_id_counter++,
+      name, funds);
 
   return Status();
 }
 
-Status Auction::openItemForBidding(Item& item) {
+Status Auction::openItemForBidding(uint32_t item_id) {
   // Check if item is registered, return NOT_FOUND if not
-  if (!isRegistered(item)) {
+  if (!isItemRegistered(item_id)) {
     return error::NotFound("Item \"",
-        item.getName(), "\" is not registered in the auction.");
+        items[item_id]->getName(), "\" is not registered in the auction.");
   }
 
   // Check if item is sold, return ITEM_UNAVAILABLE if not
-  if (item.isSold()) {
+  if (items[item_id]->isSold()) {
     return error::ItemUnavailable("Item \"",
-        item.getName(), "\" has been sold.");
+        items[item_id]->getName(), "\" has been sold.");
   }
 
   // Check if item is already open, if not add it.
-  if (!isOpen(item))
-    open_items.push_back(&item);
+  if (!isOpen(item_id))
+    open_items.push_back(item_id);
 
   return Status();
 }
 
-Status Auction::closeItemForBidding(Item& item, bool sell) {
+Status Auction::closeItemForBidding(uint32_t item_id, bool sell) {
   // Check if item is registered, return NOT_FOUND if not
-  if (!isRegistered(item)) {
+  if (!isItemRegistered(item_id)) {
     return error::NotFound("Item \"",
-        item.getName(), "\" is not registered in the auction.");
+        items[item_id]->getName(), "\" is not registered in the auction.");
   }
 
   // If item is open, find it in open items, sell it, and close it
-  if (isOpen(item)) {
-    std::vector<Item*>::iterator it = std::find(open_items.begin(),
-        open_items.end(), &item);
+  if (isOpen(item_id)) {
+    std::vector<uint32_t>::iterator it = std::find(
+        open_items.begin(), open_items.end(), item_id);
     open_items.erase(it);
   } else {
     // Item is closed. Return error code if trying to sell a sold item
-    if (sell && item.isSold()) {
+    if (sell && items[item_id]->isSold()) {
       return error::ItemUnavailable("Item \"",
-          item.getName(), "\" has been sold.");
+          items[item_id]->getName(), "\" has been sold.");
     }
   }
 
   // Item is not sold. Sell if specified.
   if (sell) {
-    item.sell();
-    revenue += item.getCurrentBid()->value;
+    items[item_id]->sell();
+    revenue += items[item_id]->getCurrentBid()->value;
   }
 
   return Status();
+}
+
+Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
+  Item* item = items[item_id].get();
+  User* user = users[user_id].get();
+
+  Bid* current_bid = item->getCurrentBid();
+
+  if (value > user->getFunds()) {
+    return error::InsufficientFunds("Attempted bid value ",
+        value, " is greater than user's available funds.");
+  }
+
+  if (!isItemRegistered(item_id)) {
+    return error::NotFound("Item \"",
+        item->getName(), "\" is not registered in the auction.");
+  }
+
+  if (!isOpen(item_id)) {
+    return error::ItemUnavailable("Item \"",
+        item->getName(), "\" is not currently open in the auction.");
+  }
+
+  if (current_bid && value <= current_bid->value) {
+    return error::InvalidBid("Attempted bid value ",
+        value, " is not higher than the current bid value ",
+        current_bid->value, " .");
+  } else if (value < item->getStartingValue()) {
+    return error::InvalidBid("Attempted bid value ",
+        value, " is not higher than the starting bid value ",
+        item->getStartingValue(), " .");
+  }
+
+  // Create bid
+  Bid bid(value, user_id, item_id);
+
+  // Add bid to user's placed bids, sorting by item id and bid value.
+  user->addBid(bid);
+
+  // Add item to user's items bid on
+  user->addItem(item_id);
+
+  // Place bid on item.
+  item->addBid(bid);
+
+  return Status();
+
 }
 
 }  // namespace auction_engine

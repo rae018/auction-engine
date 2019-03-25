@@ -24,6 +24,6 @@ limitations under the License.
 int main() {
   auction_engine::Auction auction;
   auction.addUser("Reed", 200);
-  auction_engine::print::printUserList(auction.getUsers());
+  auction_engine::print::printUserList(auction, auction.getUsers());
   return 0;
 }

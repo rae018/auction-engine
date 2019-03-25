@@ -28,17 +28,17 @@ namespace auction_engine {
 struct Bid {
 
   /// Create bid.
-  Bid(uint32_t value, User& user, Item& item)
-      : value(value), owner(user), item(item) {}
+  Bid(uint32_t value, uint32_t user_id, uint32_t item_id)
+      : value(value), user_id(user_id), item_id(item_id) {}
 
   /// Value of the bid.
   uint32_t value;
 
   /// User that placed the bid.
-  User& owner;
+  uint32_t user_id;
 
   /// Item the bid was placed on.
-  Item& item;
+  uint32_t item_id;
 
   /// Number of the bid for the item it was placed on.
   uint16_t number;

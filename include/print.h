@@ -24,17 +24,17 @@ namespace auction_engine {
 
 namespace print {
   
-void printBid(Bid& bid);
+void printBid(Auction& auction, Bid& bid);
 
-void printItem(Item& item);
+void printItem(std::unique_ptr<Item> const& item);
 
-void printUser(std::unique_ptr<User>& user);
+void printUser(std::unique_ptr<User> const& user);
 
-void printBidList(std::vector<Bid*> bids);
+void printBidList(Auction& auction, std::vector<Bid*> bids);
 
-void printItemList(std::vector<Item*> items);
+void printItemList(Auction& auction, std::vector<uint32_t> item_ids);
 
-void printUserList(std::vector<std::unique_ptr<User>> const& users);
+void printUserList(Auction& auction, std::vector<uint32_t> user_ids);
 
 }  // namespace print
 
