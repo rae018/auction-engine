@@ -52,13 +52,13 @@ public:
 
   /// Returns \c true if \c user is registered with the auction, \c false
   /// otherwise.
-  bool isRegistered(User& user);
+  bool isRegistered(std::unique_ptr<User>& user);
 
   /// Returns \c true if \c item is open in the auction, \c false otherwise.
   bool isOpen(Item& item);
 
   /// Return all users registered in the auction.
-  std::vector<User*> getUsers() const { return users; }
+  std::vector<std::unique_ptr<User>> const& getUsers() const { return users; }
 
   /**
    * \brief Add an item to the auction.
@@ -137,7 +137,7 @@ public:
 protected:
   std::vector<Item*> items;               ///< Items registered in the auction.
   std::vector<Item*> open_items;          ///< Items currently open for bidding.
-  std::vector<User*> users;               ///< Users Registered in the auction.
+  std::vector<std::unique_ptr<User>> users;               ///< Users Registered in the auction.
   uint32_t item_id_counter;               ///< Counter for assigning item ids.
   uint32_t user_id_counter;               ///< Counter for assigning user ids.
   uint32_t revenue;                       ///< Total revenue of the auction.

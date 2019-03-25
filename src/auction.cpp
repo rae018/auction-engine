@@ -26,9 +26,9 @@ limitations under the License.
 
 namespace auction_engine {
 
-bool Auction::isRegistered(User& user) {
-  std::vector<User*>::iterator it = std::find(users.begin(), users.end(),
-      &user);
+bool Auction::isRegistered(std::unique_ptr<User>& user) {
+  std::vector<std::unique_ptr<User>>::iterator it = std::find(users.begin(),
+      users.end(), user);
   if (it != users.end())
     return true;
   else
@@ -69,7 +69,7 @@ Status Auction::addItem(std::string name, uint32_t starting_value) {
 }
 
 Status Auction::addUser(std::string name, uint32_t funds) {
-  for (User* user: users) {
+  for (auto const& user: users) {
     if (name == user->getName()) {
       return error::NameTaken("A user with name \"",
           name, "\"already exists.");
@@ -77,8 +77,12 @@ Status Auction::addUser(std::string name, uint32_t funds) {
   }
 
   // Create and add user
-  User new_user(*this, user_id_counter++, name, funds);
-  users.push_back(&new_user);
+  //User* new_user = new User(*this, user_id_counter++, name, funds);
+  //std::shared_ptr<User> new_user = std::make_shared<User>(*this, 
+  //    user_id_counter++, name, funds);
+  std::unique_ptr<User> new_user(new User(*this, user_id_counter++, name,
+      funds));
+  users.push_back(std::move(new_user));
 
   return Status();
 }

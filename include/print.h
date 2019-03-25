@@ -28,13 +28,13 @@ void printBid(Bid& bid);
 
 void printItem(Item& item);
 
-void printUser(User& user);
+void printUser(std::unique_ptr<User>& user);
 
 void printBidList(std::vector<Bid*> bids);
 
 void printItemList(std::vector<Item*> items);
 
-void printUserList(std::vector<User*> users);
+void printUserList(std::vector<std::unique_ptr<User>> const& users);
 
 }  // namespace print
 

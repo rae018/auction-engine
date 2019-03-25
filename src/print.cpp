@@ -35,7 +35,7 @@ inline void printEntry(T t) {
 
 inline void printLine(const int num_fields) {
   for (int i=0; i<num_fields; ++i) {
-    std::cout << std::setw(entry_width) << std::setfill('-');
+    std::cout << std::setw(entry_width) << std::setfill('-') << "";
   }
   std::cout << std::endl;
 }
@@ -62,12 +62,12 @@ void printItem(Item& item) {
   std::cout << "}" << std::endl;
 }
 
-void printUser(User& user) {
+void printUser(std::unique_ptr<User>& user) {
   std::cout << "{ User" << std::endl;
-  std::cout << "Name: " << user.getName() << std::endl;
-  std::cout << "ID: " << user.getId() << std::endl;
-  std::cout << "Funds: " << user.getFunds() << std::endl;
-  std::cout << "Number of items bid on: " << user.getItemsBidOn().size() <<
+  std::cout << "Name: " << user->getName() << std::endl;
+  std::cout << "ID: " << user->getId() << std::endl;
+  std::cout << "Funds: " << user->getFunds() << std::endl;
+  std::cout << "Number of items bid on: " << user->getItemsBidOn().size() <<
       std::endl;
   std::cout << "}" << std::endl;
 }
@@ -104,14 +104,14 @@ void printItemList(std::vector<Item*> items) {
   }
 }
 
-void printUserList(std::vector<User*> users) {
+void printUserList(std::vector<std::unique_ptr<User>> const& users) {
   printEntry("User Name");
   printEntry("User ID");
   printEntry("Funds");
   printEntry("Items Bid On");
   std::cout << std::endl;
   printLine(4);
-  for (User* user: users) {
+  for (auto const& user: users) {
     printEntry(user->getName());
     printEntry(user->getId());
     printEntry(user->getFunds());
