@@ -23,23 +23,20 @@ limitations under the License.
 #include <iomanip>
 
 namespace auction_engine {
-
 namespace print {
 
-const int entry_width = 16;
+const int kEntryWidth = 16;
 
 template<typename T>
 inline void printEntry(T t) {
-  std::cout << std::left << std::setw(entry_width) << std::setfill(' ') << t;
+  std::cout << std::left << std::setw(kEntryWidth) << std::setfill(' ') << t;
 }
-
 inline void printLine(const int num_fields) {
   for (int i=0; i<num_fields; ++i) {
-    std::cout << std::setw(entry_width) << std::setfill('-') << "";
+    std::cout << std::setw(kEntryWidth) << std::setfill('-') << "";
   }
   std::cout << std::endl;
 }
-
 
 void printBid(Auction& auction, Bid& bid) {
   std::unique_ptr<Item> const& item = auction.getItem(bid.item_id);
@@ -125,8 +122,5 @@ void printUserList(Auction& auction, std::vector<uint32_t> user_ids) {
     std::cout << std::endl;
   }
 }
-
-
 }  // namespace print
-
 }  // namespace auction_engine

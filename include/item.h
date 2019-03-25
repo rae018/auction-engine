@@ -82,5 +82,4 @@ protected:
   bool sold;                  ///< Whether the item is sold or not.
   Auction& auction;           ///< The \c Auction this item is a part of.
 };
-
 }  // namespace auction_engine

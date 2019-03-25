@@ -47,7 +47,6 @@ public:
     return ok() ? std::string() : state->msg;
   }
   
-
 private:
   // This state is NULL if there is no error (error::Code == OK) signifying an 
   // OK status. Otherwise it contains the error code and message.
@@ -57,5 +56,4 @@ private:
   };
   std::unique_ptr<State> state;
 };
-
 }  // namespace auction_engine

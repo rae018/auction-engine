@@ -16,9 +16,8 @@ limitations under the License.
 #pragma once
 
 namespace auction_engine {
-
 namespace error {
-  
+
   enum Code {                                                           
   // No error, returned on success                                                  
   OK,                                                                               
@@ -41,5 +40,4 @@ namespace error {
 };  
 
 }  // namespace error
-
 }  // namespace auction_engine

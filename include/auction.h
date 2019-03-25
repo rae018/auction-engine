@@ -42,7 +42,7 @@ public:
   Auction() : item_id_counter(0), user_id_counter(0), revenue(0) {} 
 
   /// Return all items registered in the auction.
-  std::vector<uint32_t> getItems();
+  std::vector<uint32_t> const getItems();
 
   /// Return all items open in the auction.
   std::vector<uint32_t> const& getOpenItems() const { 
@@ -61,13 +61,17 @@ public:
   bool isOpen(uint32_t item_id);
 
   /// Return all users registered in the auction.
-  std::vector<uint32_t> getUsers();
+  std::vector<uint32_t> const getUsers();
 
   /// Return a single user
-  std::unique_ptr<User> const& getUser(uint32_t user_id) { return users[user_id]; }
+  std::unique_ptr<User> const& getUser(uint32_t user_id) {
+    return users[user_id];
+  }
 
   /// Return a single item
-  std::unique_ptr<Item> const& getItem(uint32_t item_id) { return items[item_id]; }
+  std::unique_ptr<Item> const& getItem(uint32_t item_id) {
+    return items[item_id];
+  }
 
   /**
    * \brief Add an item to the auction.
@@ -167,14 +171,18 @@ public:
   Status placeBid(uint32_t item_id, uint32_t user_id, uint32_t value);
 
 protected:
-  std::map<uint32_t, std::unique_ptr<Item>> items;  ///< Items registered in the auction.
-  std::vector<uint32_t> open_items;       ///< Item IDs currently open for bidding.
-  std::map<uint32_t, std::unique_ptr<User>> users;         ///< Users Registered in the auction.
-  uint32_t item_id_counter;               ///< Counter for assigning item ids.
-  uint32_t user_id_counter;               ///< Counter for assigning user ids.
-  uint32_t revenue;                       ///< Total revenue of the auction.
-  const int entry_width = 16;
+  /// Items registered in the auction.
+  std::map<uint32_t, std::unique_ptr<Item>> items;
+  /// Item IDs currently open for bidding.
+  std::vector<uint32_t> open_items;
+  /// Users Registered in the auction.
+  std::map<uint32_t, std::unique_ptr<User>> users;
+  /// Counter for assigning item ids.
+  uint32_t item_id_counter;
+  /// Counter for assigning user ids.
+  uint32_t user_id_counter;
+  ///  Total revenue of the auction.
+  uint32_t revenue;
 };
-
 }  // namespace auction_engine
 

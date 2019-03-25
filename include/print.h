@@ -21,7 +21,6 @@ limitations under the License.
 #include <vector>
 
 namespace auction_engine {
-
 namespace print {
   
 void printBid(Auction& auction, Bid& bid);
@@ -37,5 +36,4 @@ void printItemList(Auction& auction, std::vector<uint32_t> item_ids);
 void printUserList(Auction& auction, std::vector<uint32_t> user_ids);
 
 }  // namespace print
-
 }  // namespace auction_engine

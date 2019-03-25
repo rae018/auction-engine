@@ -25,7 +25,6 @@ limitations under the License.
  */
 
 namespace auction_engine {
-
 namespace error {
 
 /// Base case for \c concatArgs(const T& t, const Args&... args) 
@@ -101,5 +100,4 @@ inline bool IsNameTaken(::auction_engine::Status& status) {
 }
 
 }  // namespace error
-
 }  // namespace auction_engine

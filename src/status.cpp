@@ -21,5 +21,4 @@ Status::Status(auction_engine::error::Code code, std::string msg) {
   state->code = code;
   state->msg = msg;
 }
-
 }  // namespace auction_engine

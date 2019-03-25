@@ -87,5 +87,4 @@ protected:
   std::vector<uint32_t> items_bid_on;  ///< Item IDs for items user has bid on.
   Auction& auction;                 ///< The \c Auction this user is a part of.
 };
-
 }  // namespace auction_engine

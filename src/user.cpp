@@ -27,9 +27,11 @@ namespace auction_engine {
 
 void User::addBid(Bid& bid) {
   bids_placed.push_back(&bid);
+
   for (int i=bids_placed.size(); i>0; --i) {
     uint32_t cur_item_id = bids_placed[i-1]->item_id;
     std::unique_ptr<Item> const& cur_item = auction.getItem(cur_item_id);
+
     if (cur_item->getId() > auction.getItem(bid.item_id)->getId()) {
       bids_placed[i] = bids_placed[i-1];
     } else {
@@ -41,6 +43,7 @@ void User::addBid(Bid& bid) {
 
 void User::addItem(uint32_t item_id) {
   items_bid_on.push_back(item_id);
+
   for (int i=items_bid_on.size(); i>0; --i) {
     if (items_bid_on[i-1] > item_id) {
       items_bid_on[i] = items_bid_on[i-1];
@@ -50,6 +53,5 @@ void User::addItem(uint32_t item_id) {
     }
   }
 }
-
 }  // namespace auction_engine
 

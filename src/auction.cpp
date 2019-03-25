@@ -29,38 +29,29 @@ limitations under the License.
 #include <iostream>
 
 namespace auction_engine {
-
 bool Auction::isUserRegistered(uint32_t user_id) {
-  if (users.count(user_id))
-    return true;
-  else
-    return false;
+  return users.count(user_id);
 }
 
 bool Auction::isItemRegistered(uint32_t item_id) {
-  if (items.count(item_id))
-    return true;
-  else
-    return false;
+  return items.count(item_id);
+
 }
 
 bool Auction::isOpen(uint32_t item_id) {
   std::vector<uint32_t>::iterator it = std::find(
       open_items.begin(), open_items.end(), item_id);
-  if (it != open_items.end())
-    return true;
-  else
-    return false;
+  return it != open_items.end();
 }
 
-std::vector<uint32_t> Auction::getItems() {
+std::vector<uint32_t> const Auction::getItems() {
   std::vector<uint32_t> item_id_vec;
   for (auto it=items.begin(); it!=items.end(); ++it)
     item_id_vec.push_back(it->first);
   return item_id_vec;
 }
 
-std::vector<uint32_t> Auction::getUsers() {
+std::vector<uint32_t> const Auction::getUsers() {
   std::vector<uint32_t> user_id_vec;
   for (auto it=users.begin(); it!=users.end(); ++it)
     user_id_vec.push_back(it->first);
@@ -190,8 +181,6 @@ Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
   item->addBid(bid);
 
   return Status();
-
 }
-
 }  // namespace auction_engine
 
