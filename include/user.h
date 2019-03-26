@@ -18,10 +18,8 @@ limitations under the License.
 #include <bid.h>
 #include <item.h>
 #include <auction.h>
-#include <status.h>
 #include <string>
 #include <vector>
-#include <map>
 #include <stdint.h>
 
 namespace auction_engine {
@@ -41,14 +39,14 @@ class User {
 public:
   User (Auction& auction, uint32_t id, std::string name, uint32_t funds=0)
       : auction(auction), id(id), name(name), funds(funds) {}
-
-	/// Return the user's id.
+      
+  /// Return the user's id.
 	const uint32_t getId() const { return id; }
 
   /// Return the user's name.
   const std::string getName() const { return name; }
-
-	/// Return the user's bids.
+  
+  /// Return the user's bids.
 	std::vector<const Bid*> getBids() const { return bids_placed; }
 
   /// Return the user's available funds.

@@ -13,12 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include <bid.h>
 #include <item.h>
-#include <error.h>
-#include <status.h>
-#include <user.h>
-#include <string>
 #include <vector>
 #include <stdint.h>
 

@@ -16,10 +16,6 @@ limitations under the License.
 #include <bid.h>
 #include <item.h>
 #include <user.h>
-#include <error.h>
-#include <status.h>
-#include <string>
-#include <map>
 #include <vector>
 #include <stdint.h>
 
@@ -30,9 +26,11 @@ void User::addBid(const Bid& bid) {
 
   for (int i=bids_placed.size(); i>0; --i) {
     uint32_t cur_item_id = bids_placed[i-1]->item_id;
+
     const Item* cur_item, *bid_item;
     auction.getItem(cur_item_id, cur_item);
     auction.getItem(bid.item_id, bid_item);
+
     if (cur_item->getId() > bid_item->getId()) {
       bids_placed[i] = bids_placed[i-1];
     } else {

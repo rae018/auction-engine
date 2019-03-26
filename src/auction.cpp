@@ -29,8 +29,19 @@ limitations under the License.
 #include <iostream>
 
 namespace auction_engine {
-bool Auction::isUserRegistered(uint32_t user_id) const {
-  return users.count(user_id);
+
+std::vector<uint32_t> const Auction::getItems() const {
+  std::vector<uint32_t> item_id_vec;
+  for (auto it=items.begin(); it!=items.end(); ++it)
+    item_id_vec.push_back(it->first);
+  return item_id_vec;
+}
+
+std::vector<uint32_t> const Auction::getUsers() const {
+  std::vector<uint32_t> user_id_vec;
+  for (auto it=users.begin(); it!=users.end(); ++it)
+    user_id_vec.push_back(it->first);
+  return user_id_vec;
 }
 
 bool Auction::isItemRegistered(uint32_t item_id) const {
@@ -38,31 +49,47 @@ bool Auction::isItemRegistered(uint32_t item_id) const {
 
 }
 
-bool Auction::isOpen(uint32_t item_id) {
-  std::vector<uint32_t>::iterator it = std::find(
+bool Auction::isUserRegistered(uint32_t user_id) const {
+  return users.count(user_id);
+}
+
+bool Auction::isOpen(uint32_t item_id) const {
+  std::vector<uint32_t>::const_iterator it = std::find(
       open_items.begin(), open_items.end(), item_id);
   return it != open_items.end();
 }
 
-std::vector<uint32_t> const Auction::getItems() {
-  std::vector<uint32_t> item_id_vec;
-  for (auto it=items.begin(); it!=items.end(); ++it)
-    item_id_vec.push_back(it->first);
-  return item_id_vec;
+Status Auction::getItem(uint32_t item_id, const Item*& item) const {
+  if (isItemRegistered(item_id)) {
+    item = items.at(item_id).get();
+    return Status::OK();
+  } else {
+    return error::NotFound(
+        "Item ID ",
+        item_id,
+        "is not registered in the auction.");
+  }
 }
 
-std::vector<uint32_t> const Auction::getUsers() {
-  std::vector<uint32_t> user_id_vec;
-  for (auto it=users.begin(); it!=users.end(); ++it)
-    user_id_vec.push_back(it->first);
-  return user_id_vec;
+Status Auction::getUser(uint32_t user_id, const User*& user) const {
+  if (isUserRegistered(user_id)) {
+    user = users.at(user_id).get();
+    return Status::OK();
+  } else {
+    return error::NotFound(
+        "User ID ",
+        user_id, 
+        "is not registered in the auction.");
+  }
 }
 
 Status Auction::addItem(std::string name, uint32_t starting_value) {
   for (const auto& kv: items) {
     if (name == kv.second->getName()) {
-      return error::NameTaken("An item with name \"", 
-          name, "\"already exists.");
+      return error::NameTaken(
+          "An item with name \"", 
+          name,
+          "\"already exists.");
     }
   }
 
@@ -74,21 +101,13 @@ Status Auction::addItem(std::string name, uint32_t starting_value) {
   return Status::OK();
 }
 
-Status Auction::getItem(uint32_t item_id, const Item*& item) const {
-  if (isItemRegistered(item_id)) {
-    item = items.at(item_id).get();
-    return Status::OK();
-  } else {
-    return error::NotFound("Item ID ",
-        item_id, "is not registered in the auction.");
-  }
-}
-
 Status Auction::addUser(std::string name, uint32_t funds) {
   for (const auto& kv: users) {
     if (name == kv.second->getName()) {
-      return error::NameTaken("A user with name \"",
-          name, "\"already exists.");
+      return error::NameTaken(
+          "A user with name \"",
+          name,
+          "\"already exists.");
     }
   }
 
@@ -100,27 +119,21 @@ Status Auction::addUser(std::string name, uint32_t funds) {
   return Status::OK();
 }
 
-Status Auction::getUser(uint32_t user_id, const User*& user) const {
-  if (isUserRegistered(user_id)) {
-    user = users.at(user_id).get();
-    return Status::OK();
-  } else {
-    return error::NotFound("User ID ",
-        user_id, "is not registered in the auction.");
-  }
-}
-
 Status Auction::openItemForBidding(uint32_t item_id) {
   // Check if item is registered, return NOT_FOUND if not
   if (!isItemRegistered(item_id)) {
-    return error::NotFound("Item \"",
-        item_id, "\" is not registered in the auction.");
+    return error::NotFound(
+        "Item \"",
+        item_id,
+        "\" is not registered in the auction.");
   }
 
   // Check if item is sold, return ITEM_UNAVAILABLE if not
   if (items.at(item_id)->isSold()) {
-    return error::ItemUnavailable("Item \"",
-        items.at(item_id)->getName(), "\" has been sold.");
+    return error::ItemUnavailable(
+        "Item \"",
+        items.at(item_id)->getName(),
+        "\" has been sold.");
   }
 
   // Check if item is already open, if not add it.
@@ -133,8 +146,10 @@ Status Auction::openItemForBidding(uint32_t item_id) {
 Status Auction::closeItemForBidding(uint32_t item_id, bool sell) {
   // Check if item is registered, return NOT_FOUND if not
   if (!isItemRegistered(item_id)) {
-    return error::NotFound("Item \"",
-        item_id, "\" is not registered in the auction.");
+    return error::NotFound(
+        "Item \"",
+        item_id,
+        "\" is not registered in the auction.");
   }
 
   // If item is open, find it in open items, sell it, and close it
@@ -145,8 +160,10 @@ Status Auction::closeItemForBidding(uint32_t item_id, bool sell) {
   } else {
     // Item is closed. Return error code if trying to sell a sold item
     if (sell && items.at(item_id)->isSold()) {
-      return error::ItemUnavailable("Item \"",
-          items.at(item_id)->getName(), "\" has been sold.");
+      return error::ItemUnavailable(
+          "Item \"",
+          items.at(item_id)->getName(),
+          "\" has been sold.");
     }
   }
 
@@ -161,37 +178,49 @@ Status Auction::closeItemForBidding(uint32_t item_id, bool sell) {
 
 Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
   if (!isItemRegistered(item_id)) {
-    return error::NotFound("Item \"",
-        item_id, "\" is not registered in the auction.");
+    return error::NotFound(
+        "Item \"",
+        item_id,
+        "\" is not registered in the auction.");
   }
 
   if (!isUserRegistered(user_id)) {
-    return error::NotFound("User \"",
-        user_id, "\" is not registered in the auction.");
+    return error::NotFound(
+        "User \"",
+        user_id,
+        "\" is not registered in the auction.");
   }
 
   Item* item = items.at(item_id).get();
   User* user = users.at(user_id).get();
 
   if (!isOpen(item_id)) {
-    return error::ItemUnavailable("Item \"",
-        item->getName(), "\" is not currently open in the auction.");
+    return error::ItemUnavailable(
+        "Item \"",
+        item->getName(),
+        "\" is not currently open in the auction.");
   }
 
   if (value > user->getFunds()) {
-    return error::InsufficientFunds("Attempted bid value ",
-        value, " is greater than user's available funds.");
+    return error::InsufficientFunds(
+        "Attempted bid value ",
+        value,
+        " is greater than user's available funds.");
   }
 
   const Bid* current_bid = item->getCurrentBid();
 
   if (current_bid && value <= current_bid->value) {
-    return error::InvalidBid("Attempted bid value ",
-        value, " is not higher than the current bid value ",
+    return error::InvalidBid(
+        "Attempted bid value ",
+        value,
+        " is not higher than the current bid value ",
         current_bid->value, " .");
   } else if (value < item->getStartingValue()) {
-    return error::InvalidBid("Attempted bid value ",
-        value, " is not higher than the starting bid value ",
+    return error::InvalidBid(
+        "Attempted bid value ",
+        value,
+        " is not higher than the starting bid value ",
         item->getStartingValue(), " .");
   }
 

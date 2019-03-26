@@ -42,7 +42,10 @@ public:
   Auction() : item_id_counter(0), user_id_counter(0), revenue(0) {} 
 
   /// Return all items registered in the auction.
-  std::vector<uint32_t> const getItems();
+  std::vector<uint32_t> const getItems() const;
+
+  /// Return all users registered in the auction.
+  std::vector<uint32_t> const getUsers() const;
 
   /// Return all items open in the auction.
   std::vector<uint32_t> const& getOpenItems() const { 
@@ -58,28 +61,7 @@ public:
   bool isUserRegistered(uint32_t user_id) const;
 
   /// Returns \c true if \c item is open in the auction, \c false otherwise.
-  bool isOpen(uint32_t item_id);
-
-  /// Return all users registered in the auction.
-  std::vector<uint32_t> const getUsers();
-
-  /**
-   * \brief Get a user registered in the auction.
-   *
-   * This gives access to a user in the auction by setting a passed pointer to
-   * the requested \c User object owned by the auction. If the requested user 
-   * does not exist in the auction an error code is returned and the passed 
-   * pointer isn't set to anything.
-   *
-   * \param user_id
-   *    The ID of the \c User being requested.
-   *
-   * \param user
-   *    A refernce to a \c User pointer to be set to the requested user.
-   *
-   * \return \c Status containing error code and message. 
-   */
-  Status getUser(uint32_t user_id, const User*& user) const;
+  bool isOpen(uint32_t item_id) const;
 
   /**
    * \brief Get an item registered in the auction.
@@ -98,6 +80,24 @@ public:
    * \return \c Status containing error code and message.
    */
   Status getItem(uint32_t item_id, const Item*& item) const;
+
+  /**
+   * \brief Get a user registered in the auction.
+   *
+   * This gives access to a user in the auction by setting a passed pointer to
+   * the requested \c User object owned by the auction. If the requested user 
+   * does not exist in the auction an error code is returned and the passed 
+   * pointer isn't set to anything.
+   *
+   * \param user_id
+   *    The ID of the \c User being requested.
+   *
+   * \param user
+   *    A refernce to a \c User pointer to be set to the requested user.
+   *
+   * \return \c Status containing error code and message. 
+   */
+  Status getUser(uint32_t user_id, const User*& user) const;
 
   /**
    * \brief Add an item to the auction.

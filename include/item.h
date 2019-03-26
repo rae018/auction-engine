@@ -37,7 +37,7 @@ class Auction;
 class Item {
 public:
   Item(Auction& auction, uint32_t id, std::string name, 
-      uint32_t starting_value=0)
+       uint32_t starting_value=0)
       : auction(auction), id(id), name(name), starting_value(starting_value) {}
 
   /// Return all bids placed on the item.
