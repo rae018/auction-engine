@@ -190,16 +190,9 @@ Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
         item->getStartingValue(), " .");
   }
 
-  // Create bid
   Bid bid(value, user_id, item_id);
-
-  // Add bid to user's placed bids, sorting by item id and bid value.
   user->addBid(bid);
-
-  // Add item to user's items bid on
   user->addItem(item_id);
-
-  // Place bid on item.
   item->addBid(bid);
 
   return Status();
