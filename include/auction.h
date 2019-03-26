@@ -51,11 +51,11 @@ public:
 
   /// Returns \c true if \c item is registered in the auction, \c false 
   /// otherwise.
-  bool isItemRegistered(uint32_t item_id);
+  bool isItemRegistered(uint32_t item_id) const;
 
   /// Returns \c true if \c user is registered with the auction, \c false
   /// otherwise.
-  bool isUserRegistered(uint32_t user_id);
+  bool isUserRegistered(uint32_t user_id) const;
 
   /// Returns \c true if \c item is open in the auction, \c false otherwise.
   bool isOpen(uint32_t item_id);
@@ -79,7 +79,7 @@ public:
    *
    * \return \c Status containing error code and message. 
    */
-  Status getUser(uint32_t user_id, const User*& user);
+  Status getUser(uint32_t user_id, const User*& user) const;
 
   /**
    * \brief Get an item registered in the auction.
@@ -97,7 +97,7 @@ public:
    *
    * \return \c Status containing error code and message.
    */
-  Status getItem(uint32_t item_id, const Item*& item);
+  Status getItem(uint32_t item_id, const Item*& item) const;
 
   /**
    * \brief Add an item to the auction.

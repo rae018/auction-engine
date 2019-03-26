@@ -38,7 +38,7 @@ inline void printLine(const int num_fields) {
   std::cout << std::endl;
 }
 
-void printBid(Auction& auction, Bid& bid) {
+void printBid(const Auction& auction, Bid& bid) {
   const Item* item;
   auction.getItem(bid.item_id, item);
   const User* user;
@@ -51,7 +51,7 @@ void printBid(Auction& auction, Bid& bid) {
   std::cout << "}" << std::endl;
 }
 
-void printItem(Auction& auction, uint32_t item_id) {
+void printItem(const Auction& auction, uint32_t item_id) {
   const Item* item;
   auction.getItem(item_id, item);
   std::cout << "{ ITEM" << std::endl;
@@ -63,7 +63,7 @@ void printItem(Auction& auction, uint32_t item_id) {
   std::cout << "}" << std::endl;
 }
 
-void printUser(Auction& auction, uint32_t user_id) {
+void printUser(const Auction& auction, uint32_t user_id) {
   const User* user;
   auction.getUser(user_id, user);
   std::cout << "{ USER" << std::endl;
@@ -75,7 +75,7 @@ void printUser(Auction& auction, uint32_t user_id) {
   std::cout << "}" << std::endl;
 }
 
-void printBidList(Auction& auction, std::vector<Bid*> bids) {
+void printBidList(const Auction& auction, std::vector<Bid*> bids) {
   printEntry("Item Name");
   printEntry("Bid Number");
   printEntry("Placed By");
@@ -95,7 +95,7 @@ void printBidList(Auction& auction, std::vector<Bid*> bids) {
   }
 }
 
-void printItemList(Auction& auction, std::vector<uint32_t> item_ids) {
+void printItemList(const Auction& auction, std::vector<uint32_t> item_ids) {
   printEntry("Item Name");
   printEntry("Item ID");
   printEntry("Current Value");
@@ -113,7 +113,7 @@ void printItemList(Auction& auction, std::vector<uint32_t> item_ids) {
   }
 }
 
-void printUserList(Auction& auction, std::vector<uint32_t> user_ids) {
+void printUserList(const Auction& auction, std::vector<uint32_t> user_ids) {
   printEntry("User Name");
   printEntry("User ID");
   printEntry("Funds");
