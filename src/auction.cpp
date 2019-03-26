@@ -71,13 +71,13 @@ Status Auction::addItem(std::string name, uint32_t starting_value) {
       name, starting_value);
   item_id_counter++;
 
-  return Status();
+  return Status::OK();
 }
 
 Status Auction::getItem(uint32_t item_id, const Item*& item) {
   if (isItemRegistered(item_id)) {
     item = items[item_id].get();
-    return Status();
+    return Status::OK();
   } else {
     return error::NotFound("Item ID ",
         item_id, "is not registered in the auction.");
@@ -97,13 +97,13 @@ Status Auction::addUser(std::string name, uint32_t funds) {
       name, funds);
   user_id_counter++;
 
-  return Status();
+  return Status::OK();
 }
 
 Status Auction::getUser(uint32_t user_id, const User*& user) {
   if (isUserRegistered(user_id)) {
     user = users[user_id].get();
-    return Status();
+    return Status::OK();
   } else {
     return error::NotFound("User ID ",
         user_id, "is not registered in the auction.");
@@ -127,7 +127,7 @@ Status Auction::openItemForBidding(uint32_t item_id) {
   if (!isOpen(item_id))
     open_items.push_back(item_id);
 
-  return Status();
+  return Status::OK();
 }
 
 Status Auction::closeItemForBidding(uint32_t item_id, bool sell) {
@@ -156,7 +156,7 @@ Status Auction::closeItemForBidding(uint32_t item_id, bool sell) {
     revenue += items[item_id]->getCurrentBid()->value;
   }
 
-  return Status();
+  return Status::OK();
 }
 
 Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
@@ -195,7 +195,7 @@ Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
   user->addItem(item_id);
   item->addBid(bid);
 
-  return Status();
+  return Status::OK();
 }
 }  // namespace auction_engine
 
