@@ -25,14 +25,15 @@ limitations under the License.
 
 namespace auction_engine {
 
-void User::addBid(Bid& bid) {
+void User::addBid(const Bid& bid) {
   bids_placed.push_back(&bid);
 
   for (int i=bids_placed.size(); i>0; --i) {
     uint32_t cur_item_id = bids_placed[i-1]->item_id;
-    std::unique_ptr<Item> const& cur_item = auction.getItem(cur_item_id);
-
-    if (cur_item->getId() > auction.getItem(bid.item_id)->getId()) {
+    const Item* cur_item, *bid_item;
+    auction.getItem(cur_item_id, cur_item);
+    auction.getItem(bid.item_id, bid_item);
+    if (cur_item->getId() > bid_item->getId()) {
       bids_placed[i] = bids_placed[i-1];
     } else {
       bids_placed[i] = &bid;

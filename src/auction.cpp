@@ -59,7 +59,7 @@ std::vector<uint32_t> const Auction::getUsers() {
 }
 
 Status Auction::addItem(std::string name, uint32_t starting_value) {
-  for (auto const& kv: items) {
+  for (const auto& kv: items) {
     if (name == kv.second->getName()) {
       return error::NameTaken("An item with name \"", 
           name, "\"already exists.");
@@ -67,14 +67,25 @@ Status Auction::addItem(std::string name, uint32_t starting_value) {
   }
 
   // Create and add item
-  items[item_id_counter] = std::make_unique<Item>(*this, item_id_counter++,
+  items[item_id_counter] = std::make_unique<Item>(*this, item_id_counter,
       name, starting_value);
+  item_id_counter++;
 
   return Status();
 }
 
+Status Auction::getItem(uint32_t item_id, const Item*& item) {
+  if (isItemRegistered(item_id)) {
+    item = items[item_id].get();
+    return Status();
+  } else {
+    return error::NotFound("Item ID ",
+        item_id, "is not registered in the auction.");
+  }
+}
+
 Status Auction::addUser(std::string name, uint32_t funds) {
-  for (auto const& kv: users) {
+  for (const auto& kv: users) {
     if (name == kv.second->getName()) {
       return error::NameTaken("A user with name \"",
           name, "\"already exists.");
@@ -82,10 +93,21 @@ Status Auction::addUser(std::string name, uint32_t funds) {
   }
 
   // Create and add user
-  users[user_id_counter] = std::make_unique<User>(*this, user_id_counter++,
+  users[user_id_counter] = std::make_unique<User>(*this, user_id_counter,
       name, funds);
+  user_id_counter++;
 
   return Status();
+}
+
+Status Auction::getUser(uint32_t user_id, const User*& user) {
+  if (isUserRegistered(user_id)) {
+    user = users[user_id].get();
+    return Status();
+  } else {
+    return error::NotFound("User ID ",
+        user_id, "is not registered in the auction.");
+  }
 }
 
 Status Auction::openItemForBidding(uint32_t item_id) {
@@ -141,7 +163,7 @@ Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
   Item* item = items[item_id].get();
   User* user = users[user_id].get();
 
-  Bid* current_bid = item->getCurrentBid();
+  const Bid* current_bid = item->getCurrentBid();
 
   if (value > user->getFunds()) {
     return error::InsufficientFunds("Attempted bid value ",

@@ -39,34 +39,38 @@ inline void printLine(const int num_fields) {
 }
 
 void printBid(Auction& auction, Bid& bid) {
-  std::unique_ptr<Item> const& item = auction.getItem(bid.item_id);
-  std::unique_ptr<User> const& user = auction.getUser(bid.user_id);
-  std::cout << "{ Bid" << std::endl;
-  std::cout << "Item: " << item->getName() << std::endl;
-  std::cout << "Number: " << bid.number << std::endl;
-  std::cout << "Owner: " << user->getName() << std::endl;
-  std::cout << "Value: " << bid.value << std::endl;
+  const Item* item;
+  auction.getItem(bid.item_id, item);
+  const User* user;
+  auction.getUser(bid.user_id, user);
+  std::cout << "{ BID" << std::endl;
+  std::cout << "  Item: " << item->getName() << std::endl;
+  std::cout << "  Number: " << bid.number << std::endl;
+  std::cout << "  Owner: " << user->getName() << std::endl;
+  std::cout << "  Value: " << bid.value << std::endl;
   std::cout << "}" << std::endl;
 }
 
-void printItem(std::unique_ptr<Item> const& item) {
-  std::cout << "{ Item" << std::endl;
-  std::cout << "Name: " << item->getName() << std::endl;
-  std::cout << "ID: " << item->getId() << std::endl;
-  std::cout << "Number of bids: " << item->getBids().size() << std::endl;
-  std::cout << "Current bid value: ";
-  item->getCurrentBid() ? std::cout << item->getCurrentBid()->value
-      : std::cout << item->getStartingValue();
-  std::cout << std::endl;
+void printItem(Auction& auction, uint32_t item_id) {
+  const Item* item;
+  auction.getItem(item_id, item);
+  std::cout << "{ ITEM" << std::endl;
+  std::cout << "  Name: " << item->getName() << std::endl;
+  std::cout << "  ID: " << item->getId() << std::endl;
+  std::cout << "  Number of bids: " << item->getBids().size() << std::endl;
+  std::cout << "  Current value: ";
+  std::cout << item->getCurrentValue() << std::endl;
   std::cout << "}" << std::endl;
 }
 
-void printUser(std::unique_ptr<User> const& user) { 
-  std::cout << "{ User" << std::endl;
-  std::cout << "Name: " << user->getName() << std::endl;
-  std::cout << "ID: " << user->getId() << std::endl;
-  std::cout << "Funds: " << user->getFunds() << std::endl;
-  std::cout << "Number of items bid on: " << user->getItemsBidOn().size() <<
+void printUser(Auction& auction, uint32_t user_id) {
+  const User* user;
+  auction.getUser(user_id, user);
+  std::cout << "{ USER" << std::endl;
+  std::cout << "  Name: " << user->getName() << std::endl;
+  std::cout << "  ID: " << user->getId() << std::endl;
+  std::cout << "  Funds: " << user->getFunds() << std::endl;
+  std::cout << "  Number of items bid on: " << user->getItemsBidOn().size() <<
       std::endl;
   std::cout << "}" << std::endl;
 }
@@ -79,8 +83,10 @@ void printBidList(Auction& auction, std::vector<Bid*> bids) {
   std::cout << std::endl;
   printLine(4);
   for (Bid* bid: bids) {
-    std::unique_ptr<Item> const& item = auction.getItem(bid->item_id);
-    std::unique_ptr<User> const& user = auction.getUser(bid->user_id);
+    const Item* item;
+    auction.getItem(bid->item_id, item);
+    const User* user;
+    auction.getUser(bid->user_id, user);
     printEntry(item->getName());
     printEntry(bid->number);
     printEntry(user->getName());
@@ -92,15 +98,16 @@ void printBidList(Auction& auction, std::vector<Bid*> bids) {
 void printItemList(Auction& auction, std::vector<uint32_t> item_ids) {
   printEntry("Item Name");
   printEntry("Item ID");
-  printEntry("Current Bid");
+  printEntry("Current Value");
   printEntry("Sold?");
   std::cout << std::endl;
   printLine(4);
   for (auto const& item_id: item_ids) {
-    std::unique_ptr<Item> const& item = auction.getItem(item_id);
+    const Item* item;
+    auction.getItem(item_id, item);
     printEntry(item->getName());
     printEntry(item->getId());
-    printEntry(item->getCurrentBid()->value);
+    printEntry(item->getCurrentValue());
     item->isSold() ? printEntry("Yes") : printEntry("No");
     std::cout << std::endl;
   }
@@ -114,7 +121,8 @@ void printUserList(Auction& auction, std::vector<uint32_t> user_ids) {
   std::cout << std::endl;
   printLine(4);
   for (auto const& user_id: user_ids) {
-    std::unique_ptr<User> const& user = auction.getUser(user_id);
+    const User* user;
+    auction.getUser(user_id, user);
     printEntry(user->getName());
     printEntry(user->getId());
     printEntry(user->getFunds());

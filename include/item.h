@@ -41,7 +41,7 @@ public:
       : auction(auction), id(id), name(name), starting_value(starting_value) {}
 
   /// Return all bids placed on the item.
-  std::vector<Bid*> getBids() const { return bids; }
+  std::vector<const Bid*> getBids() const { return bids; }
 
   /// Return the item's id.
   const uint32_t getId() const { return id; }
@@ -56,12 +56,12 @@ public:
   void sell() { sold = true; }
 
   /// Return the current bid on the item.
-  Bid* getCurrentBid() const { 
-    if (bids.back())
-      return bids.back();
-    else
-      return nullptr;
+  const Bid* getCurrentBid() const { 
+    return bids.empty() ? nullptr : bids.back();
   }
+
+  /// Return the current value of the item.
+  uint32_t getCurrentValue() const;
 
   /// Return the starting value of the item.
   const uint32_t getStartingValue() const { return starting_value; }
@@ -72,12 +72,12 @@ public:
    * \param Bid
    *    The bid to place on the item 
    */
-  void addBid(Bid& bid) { bids.push_back(&bid); }
+  void addBid(const Bid& bid) { bids.push_back(&bid); }
 
 protected:
   const uint32_t id;          ///< Id of item.
   std::string name;           ///< Name of item.
-  std::vector<Bid*> bids;     ///< All bids placed on the item.
+  std::vector<const Bid*> bids;     ///< All bids placed on the item.
   uint32_t starting_value;    ///< Starting value of item.
   bool sold;                  ///< Whether the item is sold or not.
   Auction& auction;           ///< The \c Auction this item is a part of.

@@ -25,9 +25,9 @@ namespace print {
   
 void printBid(Auction& auction, Bid& bid);
 
-void printItem(std::unique_ptr<Item> const& item);
+void printItem(Auction& auction, uint32_t item_id);
 
-void printUser(std::unique_ptr<User> const& user);
+void printUser(Auction& auction, uint32_t user_id);
 
 void printBidList(Auction& auction, std::vector<Bid*> bids);
 

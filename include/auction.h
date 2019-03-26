@@ -63,15 +63,41 @@ public:
   /// Return all users registered in the auction.
   std::vector<uint32_t> const getUsers();
 
-  /// Return a single user
-  std::unique_ptr<User> const& getUser(uint32_t user_id) {
-    return users[user_id];
-  }
+  /**
+   * \brief Get a user registered in the auction.
+   *
+   * This gives access to a user in the auction by setting a passed pointer to
+   * the requested \c User object owned by the auction. If the requested user 
+   * does not exist in the auction an error code is returned and the passed 
+   * pointer isn't set to anything.
+   *
+   * \param user_id
+   *    The ID of the \c User being requested.
+   *
+   * \param user
+   *    A refernce to a \c User pointer to be set to the requested user.
+   *
+   * \return \c Status containing error code and message. 
+   */
+  Status getUser(uint32_t user_id, const User*& user);
 
-  /// Return a single item
-  std::unique_ptr<Item> const& getItem(uint32_t item_id) {
-    return items[item_id];
-  }
+  /**
+   * \brief Get an item registered in the auction.
+   *
+   * This gives access to an item in the auction by setting a passed pointer to
+   * the requested \c Item object owned by the auction. If the requested item
+   * does not exist in the auction, an error code is return and the passed
+   * pointer isn't set to anything.
+   *
+   * \param item_id
+   *    the ID of the \c Item being requested.
+   *
+   * \param item
+   *    A reference to a \c Item pointer to be set to the requrested item.
+   *
+   * \return \c Status containing error code and message.
+   */
+  Status getItem(uint32_t item_id, const Item*& item);
 
   /**
    * \brief Add an item to the auction.

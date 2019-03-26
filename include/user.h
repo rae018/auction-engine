@@ -49,7 +49,7 @@ public:
   const std::string getName() const { return name; }
 
 	/// Return the user's bids.
-	std::vector<Bid*> getBids() const { return bids_placed; }
+	std::vector<const Bid*> getBids() const { return bids_placed; }
 
   /// Return the user's available funds.
   uint32_t getFunds() const { return funds; }
@@ -77,13 +77,13 @@ public:
    * \param bid
    *    The bid to add.
    */
-  void addBid(Bid& bid);
+  void addBid(const Bid& bid);
 
 protected:
   const uint32_t id;                ///< Id of user.
   std::string name;                 ///< Name of user.
   uint32_t funds;                   ///< Total funds available to the user. 
-  std::vector<Bid*> bids_placed;    ///< Bids the user has placed.
+  std::vector<const Bid*> bids_placed;    ///< Bids the user has placed.
   std::vector<uint32_t> items_bid_on;  ///< Item IDs for items user has bid on.
   Auction& auction;                 ///< The \c Auction this user is a part of.
 };
