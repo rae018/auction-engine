@@ -99,5 +99,15 @@ inline bool IsNameTaken(::auction_engine::Status& status) {
   return status.code() == ::auction_engine::error::NAME_TAKEN;
 }
 
+/// Function to create \c NO_BID error status.
+template <typename... Args>
+::auction_engine::Status NoBid(Args... args) {
+  return ::auction_engine::Status(::auction_engine::error::NO_BID,
+      concatArgs(args...));
+}
+/// Function to test whether error status has code \c NO_BID.
+inline bool IsNoBid(::auction_engine::Status& status) {
+  return status.code() == ::auction_engine::error::NO_BID;
+}
 }  // namespace error
 }  // namespace auction_engine

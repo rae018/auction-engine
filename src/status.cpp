@@ -18,6 +18,7 @@ limitations under the License.
 namespace auction_engine {
 
 Status::Status(auction_engine::error::Code code, std::string msg) {
+  state = std::make_unique<State>();
   state->code = code;
   state->msg = msg;
 }

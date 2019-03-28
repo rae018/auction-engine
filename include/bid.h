@@ -27,8 +27,8 @@ namespace auction_engine {
  */
 struct Bid {
   /// Create bid.
-  Bid(uint32_t value, uint32_t user_id, uint32_t item_id)
-      : value(value), user_id(user_id), item_id(item_id) {}
+  Bid(uint32_t value, uint32_t user_id, uint32_t item_id, uint16_t number)
+      : value(value), user_id(user_id), item_id(item_id), number(number) {}
 
   /// Value of the bid.
   uint32_t value;
@@ -41,5 +41,17 @@ struct Bid {
 
   /// Number of the bid for the item it was placed on.
   uint16_t number;
+
+  bool operator==(const Bid& rhs) { return value == rhs.value; }
+
+  bool operator!=(const Bid& rhs) { return value != rhs.value; }
+
+  bool operator<(const Bid& rhs) { return value < rhs.value; }
+
+  bool operator<=(const Bid& rhs) {return value <= rhs.value; }
+
+  bool operator>(const Bid& rhs) { return value > rhs.value; }
+
+  bool operator>=(const Bid& rhs) { return value >= rhs.value; }
 };
 }  // namespace auction_engine

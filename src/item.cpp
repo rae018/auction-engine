@@ -19,7 +19,7 @@ limitations under the License.
 
 namespace auction_engine {
 
-uint32_t Item::getCurrentValue() const {
+const uint32_t Item::getCurrentValue() const {
   return bids.empty() ? starting_value : bids.back()->value;
 }
 }  // namespace auction_engine

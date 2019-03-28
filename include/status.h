@@ -32,7 +32,7 @@ public:
   Status() {}
 
   /// Create ok status.
-  static Status OK() {return Status(); }
+  static Status OK() { return Status(); }
 
   /// Returns \c true if status contains no error, \c false otherwise.
   bool ok() const { return state == NULL; }

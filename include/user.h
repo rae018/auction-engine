@@ -37,23 +37,37 @@ class Auction;
  */
 class User {
 public:
-  User (Auction& auction, uint32_t id, std::string name, uint32_t funds=0)
-      : auction(auction), id(id), name(name), funds(funds) {}
+  User(const Auction& auction, uint32_t id, std::string name, uint32_t funds=0)
+      : auction(auction), id(id), name(name), funds(funds),
+        available_funds(funds) {}
       
   /// Return the user's id.
-	const uint32_t getId() const { return id; }
+  const uint32_t getId() const { return id; }
 
   /// Return the user's name.
   const std::string getName() const { return name; }
   
   /// Return the user's bids.
-	std::vector<const Bid*> getBids() const { return bids_placed; }
+  const std::vector<const Bid*> getBids() const { return bids_placed; }
 
   /// Return the user's available funds.
-  uint32_t getFunds() const { return funds; }
+  uint32_t getAvailableFunds() const { return funds; }
+
+  /// Return the user's total funds.
+  uint32_t getTotalFunds() const { return funds; }
 
   /// Return all items the user has bid on.
   std::vector<uint32_t> getItemsBidOn() const { return items_bid_on; }
+
+  /**
+   * Checks if the user has already bid on a item.
+   *
+   * \param item_id
+   *    The ID of the \c Item to be checked.
+   *
+   * \return \c true if the user has bid on this item, \c false otherwise.
+   */
+  bool alreadyBidOnItem(uint32_t item_id) const;
 
   /**
    * \brief Add an item to the user's items bid on.
@@ -78,11 +92,19 @@ public:
   void addBid(const Bid& bid);
 
 protected:
-  const uint32_t id;                ///< Id of user.
-  std::string name;                 ///< Name of user.
-  uint32_t funds;                   ///< Total funds available to the user. 
-  std::vector<const Bid*> bids_placed;    ///< Bids the user has placed.
-  std::vector<uint32_t> items_bid_on;  ///< Item IDs for items user has bid on.
-  Auction& auction;                 ///< The \c Auction this user is a part of.
+  /// Id of user.
+  const uint32_t id;
+  /// Name of user.
+  std::string name;
+  /// Total funds of the user.
+  uint32_t funds;
+  /// Funds available. This is the total funds minus any standing bids.
+  uint32_t available_funds;
+  /// Bids the user has placed.
+  std::vector<const Bid*> bids_placed;
+  /// \c Item IDs for the items the user has bid on.
+  std::vector<uint32_t> items_bid_on;
+  /// The \c Auction this user is a part of.
+  const Auction& auction;           ///< The \c Auction this user is a part of.
 };
 }  // namespace auction_engine

@@ -22,6 +22,16 @@ limitations under the License.
 #include <iostream>
 #include <iomanip>
 
+/*
+ * =======================================================================
+ *   WARNING    WARNING    WARNING    WARNING    WARNING    WARNING
+ * =======================================================================
+ *   These functions will only print valid values correctly and do no
+ *   error checking whatsoever. If you send it garbage it will print 
+ *   garbage or possible crash. 
+ * =======================================================================
+ */
+
 namespace auction_engine {
 namespace print {
 
@@ -69,20 +79,21 @@ void printUser(const Auction& auction, const uint32_t user_id) {
   std::cout << "{ USER" << std::endl;
   std::cout << "  Name: " << user->getName() << std::endl;
   std::cout << "  ID: " << user->getId() << std::endl;
-  std::cout << "  Funds: " << user->getFunds() << std::endl;
+  std::cout << "  Total Funds: " << user->getTotalFunds() << std::endl;
+  std::cout << "  Available Funds: " << user->getAvailableFunds() << std::endl;
   std::cout << "  Number of items bid on: " << user->getItemsBidOn().size() <<
       std::endl;
   std::cout << "}" << std::endl;
 }
 
-void printBidList(const Auction& auction, const std::vector<Bid*> bids) {
+void printBidList(const Auction& auction, const std::vector<const Bid*> bids) {
   printEntry("Item Name");
   printEntry("Bid Number");
   printEntry("Placed By");
   printEntry("Value");
   std::cout << std::endl;
   printLine(4);
-  for (Bid* bid: bids) {
+  for (const Bid* bid: bids) {
     const Item* item;
     auction.getItem(bid->item_id, item);
     const User* user;
@@ -109,7 +120,7 @@ void printItemList(const Auction& auction,
     printEntry(item->getName());
     printEntry(item->getId());
     printEntry(item->getCurrentValue());
-    item->isSold() ? printEntry("Yes") : printEntry("No");
+    auction.isSold(item->getId()) ? printEntry("Yes") : printEntry("No");
     std::cout << std::endl;
   }
 }
@@ -118,7 +129,8 @@ void printUserList(const Auction& auction,
                    const std::vector<uint32_t> user_ids) {
   printEntry("User Name");
   printEntry("User ID");
-  printEntry("Funds");
+  printEntry("Total Funds");
+  printEntry("Available Funds");
   printEntry("Items Bid On");
   std::cout << std::endl;
   printLine(4);
@@ -127,7 +139,8 @@ void printUserList(const Auction& auction,
     auction.getUser(user_id, user);
     printEntry(user->getName());
     printEntry(user->getId());
-    printEntry(user->getFunds());
+    printEntry(user->getTotalFunds());
+    printEntry(user->getAvailableFunds());
     printEntry(user->getItemsBidOn().size());
     std::cout << std::endl;
   }

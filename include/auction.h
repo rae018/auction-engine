@@ -63,6 +63,12 @@ public:
   /// Returns \c true if \c item is open in the auction, \c false otherwise.
   bool isOpen(uint32_t item_id) const;
 
+  /// Returns \c true if \c item is sold, \c false otherwise.
+  bool isSold(uint32_t item_id) const;
+
+  /// Returns the total revenue of the auction
+  const uint32_t getRevenue() const { return revenue; }
+
   /**
    * \brief Get an item registered in the auction.
    *
@@ -148,12 +154,28 @@ public:
    * the return \c Status will contain an error code and message. If the item is
    * already open, the function just returns with an OK status.
    *
-   * \param item
-   *    An \c Item to open for auction. 
+   * \param item_id
+   *    The ID of the \c Item to open for auction. 
    *
    * \return \c Status containing error code and message.
    */
-  Status openItemForBidding(uint32_t item_id);
+  Status openItem(uint32_t item_id);
+
+  /**
+   * \brief Sell an item with at least one bid.
+   *
+   * This sells an \c Item in the auction that has at least one \c Bid. The item
+   * must be registered in the auction but doesn not have to be open. If the
+   * item is not registered in the auction or if it has already been sold, the
+   * return \c Status will contain an appropriate error code and message.
+   * Otherwise it will return an OK status
+   *
+   * \param item_id
+   *    The ID of the \c Item to open for auction. 
+   *
+   * \return \c Status containing error code and message.
+   */
+  Status sellItem(uint32_t item_id);
 
   /**
    * \brief Close an open item for bidding.
@@ -171,7 +193,7 @@ public:
    *
    * \return \c Status containing error code and message.
    */
-  Status closeItemForBidding(uint32_t item_id, bool sell=false);
+  Status closeItem(uint32_t item_id, bool sell=false);
   
   /**
    * \brief Place a bid on an item.
@@ -201,6 +223,8 @@ protected:
   std::map<uint32_t, std::unique_ptr<Item>> items;
   /// Item IDs currently open for bidding.
   std::vector<uint32_t> open_items;
+  /// Item ID's for sold items.
+  std::vector<uint32_t> sold_items;
   /// Users Registered in the auction.
   std::map<uint32_t, std::unique_ptr<User>> users;
   /// Counter for assigning item ids.

@@ -36,7 +36,10 @@ namespace error {
   ITEM_UNAVAILABLE,
                                                                                     
   // Item or user registered with name that is already in use.                      
-  NAME_TAKEN                                                                        
+  NAME_TAKEN,
+
+  // Attempted to sell item with no bid
+  NO_BID
 };  
 
 }  // namespace error

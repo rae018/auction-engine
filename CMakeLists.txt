@@ -26,3 +26,45 @@ add_executable(auction_engine
   src/status.cpp
   src/user.cpp
 )
+
+add_executable(item_test
+
+  # Header files
+  include/bid.h
+  include/auction.h
+  include/error.h
+  include/error_codes.h
+  include/item.h
+  include/print.h
+  include/user.h
+  include/status.h
+
+  # Source code files
+  src/item.cpp
+  src/auction.cpp
+  src/item_test.cpp
+  src/print.cpp
+  src/user.cpp
+  src/status.cpp
+)
+
+add_executable(user_test
+
+  # Header files
+  include/bid.h
+  include/auction.h
+  include/error.h
+  include/error_codes.h
+  include/item.h
+  include/print.h
+  include/user.h
+  include/status.h
+
+  # Source code files
+  src/item.cpp
+  src/auction.cpp
+  src/user_test.cpp
+  src/print.cpp
+  src/user.cpp
+  src/status.cpp
+)

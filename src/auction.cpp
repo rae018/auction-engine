@@ -25,21 +25,20 @@ limitations under the License.
 #include <algorithm>
 #include <memory>
 #include <stdint.h>
-#include <iomanip>
 #include <iostream>
 
 namespace auction_engine {
 
 std::vector<uint32_t> const Auction::getItems() const {
   std::vector<uint32_t> item_id_vec;
-  for (auto it=items.begin(); it!=items.end(); ++it)
+  for (auto it=items.cbegin(); it!=items.cend(); ++it)
     item_id_vec.push_back(it->first);
   return item_id_vec;
 }
 
 std::vector<uint32_t> const Auction::getUsers() const {
   std::vector<uint32_t> user_id_vec;
-  for (auto it=users.begin(); it!=users.end(); ++it)
+  for (auto it=users.cbegin(); it!=users.cend(); ++it)
     user_id_vec.push_back(it->first);
   return user_id_vec;
 }
@@ -54,9 +53,11 @@ bool Auction::isUserRegistered(uint32_t user_id) const {
 }
 
 bool Auction::isOpen(uint32_t item_id) const {
-  std::vector<uint32_t>::const_iterator it = std::find(
-      open_items.begin(), open_items.end(), item_id);
-  return it != open_items.end();
+  return std::binary_search(open_items.cbegin(), open_items.cend(), item_id);
+}
+
+bool Auction::isSold(uint32_t item_id) const {
+  return std::binary_search(sold_items.cbegin(), sold_items.cend(), item_id);
 }
 
 Status Auction::getItem(uint32_t item_id, const Item*& item) const {
@@ -119,7 +120,7 @@ Status Auction::addUser(std::string name, uint32_t funds) {
   return Status::OK();
 }
 
-Status Auction::openItemForBidding(uint32_t item_id) {
+Status Auction::openItem(uint32_t item_id) {
   // Check if item is registered, return NOT_FOUND if not
   if (!isItemRegistered(item_id)) {
     return error::NotFound(
@@ -128,22 +129,55 @@ Status Auction::openItemForBidding(uint32_t item_id) {
         "\" is not registered in the auction.");
   }
 
+  const Item* item = items.at(item_id).get();
+
   // Check if item is sold, return ITEM_UNAVAILABLE if not
-  if (items.at(item_id)->isSold()) {
+  if (isSold(item_id)) {
     return error::ItemUnavailable(
         "Item \"",
-        items.at(item_id)->getName(),
+        item->getName(),
         "\" has been sold.");
   }
 
   // Check if item is already open, if not add it.
-  if (!isOpen(item_id))
-    open_items.push_back(item_id);
+  if (!isOpen(item_id)) {
+    auto it = std::upper_bound(open_items.cbegin(), open_items.cend(), item_id);
+    open_items.insert(it, item_id);
+
+  }
 
   return Status::OK();
 }
 
-Status Auction::closeItemForBidding(uint32_t item_id, bool sell) {
+Status Auction::sellItem(uint32_t item_id) {
+  // Check if item is registered, return NOT_FOUND if not
+  if (!isItemRegistered(item_id)) {
+    return error::NotFound(
+        "Item \"",
+        item_id,
+        "\" is not registered in the auction.");
+  }
+
+  const Item* item = items.at(item_id).get();
+
+  // Check if item is sold, return ITEM_UNAVAILABLE if not
+  if (isSold(item_id)) {
+    return error::ItemUnavailable(
+        "Item \"",
+        item->getName(),
+        "\" has been sold.");
+  } else {
+    auto it = std::upper_bound(sold_items.cbegin(), sold_items.cend(), item_id);
+    sold_items.insert(it, item_id);
+    revenue += item->getCurrentValue();
+    // TODO: subtract winning bid from users total funds
+    // TODO: add losing bids back to users available funds
+  }
+
+  return Status::OK();
+}
+
+Status Auction::closeItem(uint32_t item_id, bool sell) {
   // Check if item is registered, return NOT_FOUND if not
   if (!isItemRegistered(item_id)) {
     return error::NotFound(
@@ -154,12 +188,11 @@ Status Auction::closeItemForBidding(uint32_t item_id, bool sell) {
 
   // If item is open, find it in open items, sell it, and close it
   if (isOpen(item_id)) {
-    std::vector<uint32_t>::iterator it = std::find(
-        open_items.begin(), open_items.end(), item_id);
-    open_items.erase(it);
+    auto it = std::lower_bound(open_items.cbegin(), open_items.cend(), item_id);
+    open_items.erase(it+1);
   } else {
     // Item is closed. Return error code if trying to sell a sold item
-    if (sell && items.at(item_id)->isSold()) {
+    if (sell && isSold(item_id)) {
       return error::ItemUnavailable(
           "Item \"",
           items.at(item_id)->getName(),
@@ -168,12 +201,10 @@ Status Auction::closeItemForBidding(uint32_t item_id, bool sell) {
   }
 
   // Item is not sold. Sell if specified.
-  if (sell) {
-    items.at(item_id)->sell();
-    revenue += items.at(item_id)->getCurrentBid()->value;
-  }
-
-  return Status::OK();
+  if (sell)
+    return sellItem(item_id); 
+  else 
+    return Status::OK();
 }
 
 Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
@@ -201,33 +232,29 @@ Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
         "\" is not currently open in the auction.");
   }
 
-  if (value > user->getFunds()) {
+  // TODO: it should be their current bid + their available funds
+  if (value > user->getAvailableFunds()) {
     return error::InsufficientFunds(
         "Attempted bid value ",
         value,
         " is greater than user's available funds.");
   }
-
-  const Bid* current_bid = item->getCurrentBid();
-
-  if (current_bid && value <= current_bid->value) {
+  
+  const uint32_t current_value = item->getCurrentValue();
+  if ((!item->getBids().empty() && value < current_value) ||
+      value <= current_value) {
     return error::InvalidBid(
         "Attempted bid value ",
         value,
-        " is not higher than the current bid value ",
-        current_bid->value, " .");
-  } else if (value < item->getStartingValue()) {
-    return error::InvalidBid(
-        "Attempted bid value ",
-        value,
-        " is not higher than the starting bid value ",
-        item->getStartingValue(), " .");
+        " is not higher than the current value ",
+        current_value, ".");
   }
-
-  Bid bid(value, user_id, item_id);
-  user->addBid(bid);
+  const Bid* current_bid = item->getCurrentBid();
+  uint16_t bid_number = current_bid ? current_bid->number+1 : 0;
+  const Bid* bid = new Bid(value, user_id, item_id, bid_number);
+  user->addBid(*bid);
   user->addItem(item_id);
-  item->addBid(bid);
+  item->addBid(*bid);
 
   return Status::OK();
 }

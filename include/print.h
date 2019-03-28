@@ -23,17 +23,17 @@ limitations under the License.
 namespace auction_engine {
 namespace print {
   
-void printBid(const Auction& auction, Bid& bid);
+void printBid(const Auction& auction, const Bid& bid);
 
 void printItem(const Auction& auction, uint32_t item_id);
 
 void printUser(const Auction& auction, uint32_t user_id);
 
-void printBidList(const Auction& auction, std::vector<Bid*> bids);
+void printBidList(const Auction& auction, const std::vector<const Bid*> bids);
 
-void printItemList(const Auction& auction, std::vector<uint32_t> item_ids);
+void printItemList(const Auction& auction, const std::vector<uint32_t> item_ids);
 
-void printUserList(const Auction& auction, std::vector<uint32_t> user_ids);
+void printUserList(const Auction& auction, const std::vector<uint32_t> user_ids);
 
 }  // namespace print
 }  // namespace auction_engine

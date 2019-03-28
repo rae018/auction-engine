@@ -16,7 +16,6 @@ limitations under the License.
 # pragma once
 
 #include <bid.h>
-#include <user.h>
 #include <auction.h>
 #include <string>
 #include <vector>
@@ -26,7 +25,6 @@ namespace auction_engine {
 
 /* Forward Declarations */
 struct Bid;
-class User;
 class Auction;
 
 /**
@@ -36,9 +34,12 @@ class Auction;
  */
 class Item {
 public:
-  Item(Auction& auction, uint32_t id, std::string name, 
+  Item(const Auction& auction, uint32_t id, std::string name, 
        uint32_t starting_value=0)
-      : auction(auction), id(id), name(name), starting_value(starting_value) {}
+      : auction(auction),
+        id(id),
+        name(name),
+        starting_value(starting_value) {}
 
   /// Return all bids placed on the item.
   std::vector<const Bid*> getBids() const { return bids; }
@@ -49,19 +50,13 @@ public:
   /// Return the item's name.
   const std::string getName() const { return name; }
 
-  /// Return whether the item has sold or not.
-  bool isSold() const { return sold; }
-
-  /// Mark the item as sold.
-  void sell() { sold = true; }
-
   /// Return the current bid on the item.
   const Bid* getCurrentBid() const { 
     return bids.empty() ? nullptr : bids.back();
   }
 
   /// Return the current value of the item.
-  uint32_t getCurrentValue() const;
+  const uint32_t getCurrentValue() const;
 
   /// Return the starting value of the item.
   const uint32_t getStartingValue() const { return starting_value; }
@@ -79,7 +74,6 @@ protected:
   std::string name;           ///< Name of item.
   std::vector<const Bid*> bids;     ///< All bids placed on the item.
   uint32_t starting_value;    ///< Starting value of item.
-  bool sold;                  ///< Whether the item is sold or not.
-  Auction& auction;           ///< The \c Auction this item is a part of.
+  const Auction& auction;     ///< The \c Auction this item is a part of.
 };
 }  // namespace auction_engine
