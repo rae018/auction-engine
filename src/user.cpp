@@ -44,6 +44,9 @@ uint32_t User::getBidValueOnItem(uint32_t item_id) const {
 }
 
 void User::addBid(const Bid& bid) {
+  if (bids_placed.count(item_id))
+    available_funds = available_funds - bid_value + 
+                      bids_placed[item_id].back()->value
   bids_placed[bid.item_id].push_back(&bid);
   available_funds -= bid.value;
 }

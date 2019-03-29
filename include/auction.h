@@ -52,18 +52,18 @@ public:
     return open_items; 
   }
 
-  /// Returns \c true if \c item is registered in the auction, \c false 
+  /// Returns \c true if \c item_id is registered in the auction, \c false 
   /// otherwise.
   bool isItemRegistered(uint32_t item_id) const;
 
-  /// Returns \c true if \c user is registered with the auction, \c false
+  /// Returns \c true if \c user_id is registered with the auction, \c false
   /// otherwise.
   bool isUserRegistered(uint32_t user_id) const;
 
-  /// Returns \c true if \c item is open in the auction, \c false otherwise.
+  /// Returns \c true if \c item_id is open in the auction, \c false otherwise.
   bool isOpen(uint32_t item_id) const;
 
-  /// Returns \c true if \c item is sold, \c false otherwise.
+  /// Returns \c true if \c item_id is sold, \c false otherwise.
   bool isSold(uint32_t item_id) const;
 
   /// Returns the total revenue of the auction
@@ -81,7 +81,7 @@ public:
    *    the ID of the \c Item being requested.
    *
    * \param item
-   *    A reference to a \c Item pointer to be set to the requrested item.
+   *    A reference to an \c Item pointer to be set to the requrested item.
    *
    * \return \c Status containing error code and message.
    */
