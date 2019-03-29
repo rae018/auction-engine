@@ -35,6 +35,11 @@ Navigate to the `/build` directory and run `cmake ..` and then `make`. This will
 From the main directory run `bazel build --cxxopt='-std=c++14' //src:<exec>`,
 replacing `<exec>` with whatever executable is to be built. To run an executable, run `bazel-bin/src/<exec>`.
 
+### Improvements
+Right now every bid is stored as a separate object. It might be better to only create one bid object for each user-item pair, and if a user bids again on the same item simply update the value of the existing bid object instead of creating an new one. Better still would be to to only keep one bid object for each user-item paid, and now change the Bid struct's `value` and `number` members to vectors so that every new bid of a user on the item would push the new value and number to these vectors. This would keep the entire bid history without duplication user_id and item_id members that happens when you create a new object. 
+
+Right now it is required that names of items and users be unique, but because they all have unique IDs to distinghish them this doesn't have to be the case. These could be made to be more flexible. 
+
 
 
 
