@@ -32,7 +32,8 @@ This project can be built using Bazel or CMake. **It must be compiled with C++14
 Navigate to the `/build` directory and run `cmake ..` and then `make`. This will build all executables. For example to run the demo run `./demo`.
 
 ##### Bazel
-From the main directory run `bazel build --cxxopt='-std-c++14' //src:<exec>`, replacing `<exec>` with whatever executable is to be built. To run a build executable, run `bazel-bin/src/<exec>`.
+From the main directory run `bazel build --cxxopt='-std=c++14' //src:<exec>`,
+replacing `<exec>` with whatever executable is to be built. To run an executable, run `bazel-bin/src/<exec>`.
 
 
 
