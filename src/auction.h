@@ -169,7 +169,7 @@ public:
    * must be registered in the auction but doesn not have to be open. If the
    * item is not registered in the auction or if it has already been sold, the
    * return \c Status will contain an appropriate error code and message.
-   * Otherwise it will return an OK status
+   * Otherwise it will return an OK statu.s
    *
    * \param item_id
    *    The ID of the \c Item to open for auction. 
@@ -182,7 +182,10 @@ public:
    * \brief Close an open item for bidding.
    *
    * This closes an open \c Item for bidding. If the item is not already open, 
-   * the return \c Status will contain an error code and message.
+   * the return \c Status will contain an error code and message. When the item
+   * is sold, the winning bid's value is subtracted from the winners total
+   * funds, and all losing bids have their value added back to their users
+   * available funds.
    *
    * \param item
    *    An \c Item that is currently open to close for bidding. 
@@ -213,7 +216,8 @@ public:
    *
    * \param value
    *    An \c uint32_t specifying the value of the bid. If the bid is successful
-   *    this value will be subtracted from the user's \c funds.
+   *    this value will be subtracted from the user's available funds until the
+   *    item is sold.
    *
    * \return \c Status containing error code and message.
    */
