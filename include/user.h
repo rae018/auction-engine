@@ -21,6 +21,7 @@ limitations under the License.
 #include <string>
 #include <vector>
 #include <stdint.h>
+#include <map>
 
 namespace auction_engine {
 
@@ -47,17 +48,31 @@ public:
   /// Return the user's name.
   const std::string getName() const { return name; }
   
-  /// Return the user's bids.
-  const std::vector<const Bid*> getBids() const { return bids_placed; }
+  /// Return all of the user's bids.
+  const std::vector<const Bid*> getBids() const;
 
   /// Return the user's available funds.
-  uint32_t getAvailableFunds() const { return funds; }
+  uint32_t getAvailableFunds() const { return available_funds; }
 
   /// Return the user's total funds.
   uint32_t getTotalFunds() const { return funds; }
 
   /// Return all items the user has bid on.
-  std::vector<uint32_t> getItemsBidOn() const { return items_bid_on; }
+  const std::vector<uint32_t> getItemsBidOn() const;
+
+  /// Returh all items the user has won.
+  const std::vector<uint32_t> getItemsWon() const { return items_won; }
+  
+  /**
+   * \brief Returns the value of the users highest bid on an item
+   * 
+   * \param item_id
+   *    The ID of the \c Item for which to get the highest bid value.
+   *
+   * \return The highest bid value if the user has placed a bid on the passed
+   * item, 0 otherwise.
+   */
+  uint32_t getBidValueOnItem(uint32_t item_id) const;
 
   /**
    * Checks if the user has already bid on a item.
@@ -67,29 +82,22 @@ public:
    *
    * \return \c true if the user has bid on this item, \c false otherwise.
    */
-  bool alreadyBidOnItem(uint32_t item_id) const;
-
-  /**
-   * \brief Add an item to the user's items bid on.
-   *
-   * This adds an item to the user's \c items_bid_on member. Items are ordered
-   * such that they are ordered by their id.
-   *
-   * \param item
-   *    The item to add.
-   */
-  void addItem(uint32_t item_id);
+  bool alreadyBidOnItem(uint32_t item_id) const {
+    return bids_placed.count(item_id);
+  }
 
   /**
    * \brief Add a bid to the user's placed bids.
    *
-   * This adds a bid to the user's \c placed_bids member. The bids are inserted
-   * such that they are sorted by their item's id and bid value.
+   * This adds a bid to the user's \c placed_bids map. This map is indexed by
+   * item IDs and the values are all bids the user has placed on that item.
    *
    * \param bid
    *    The bid to add.
    */
   void addBid(const Bid& bid);
+
+  void reportBidResult(uint32_t item_id, bool won);
 
 protected:
   /// Id of user.
@@ -100,11 +108,11 @@ protected:
   uint32_t funds;
   /// Funds available. This is the total funds minus any standing bids.
   uint32_t available_funds;
-  /// Bids the user has placed.
-  std::vector<const Bid*> bids_placed;
-  /// \c Item IDs for the items the user has bid on.
-  std::vector<uint32_t> items_bid_on;
+  /// \c Bids the user has placed, indexed by item id.
+  std::map<uint32_t, std::vector<const Bid*>> bids_placed;
+  /// The \c Items this user has won.
+  std::vector<uint32_t> items_won;
   /// The \c Auction this user is a part of.
-  const Auction& auction;           ///< The \c Auction this user is a part of.
+  const Auction& auction; 
 };
 }  // namespace auction_engine

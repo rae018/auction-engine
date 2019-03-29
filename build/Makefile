@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named demo
+
+# Build rule for target.
+demo: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 demo
+.PHONY : demo
+
+# fast build rule for target.
+demo/fast:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/build
+.PHONY : demo/fast
+
+#=============================================================================
 # Target rules for targets named user_test
 
 # Build rule for target.
@@ -122,6 +135,19 @@ user_test: cmake_check_build_system
 user_test/fast:
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/build
 .PHONY : user_test/fast
+
+#=============================================================================
+# Target rules for targets named auction_test
+
+# Build rule for target.
+auction_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 auction_test
+.PHONY : auction_test
+
+# fast build rule for target.
+auction_test/fast:
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/build
+.PHONY : auction_test/fast
 
 #=============================================================================
 # Target rules for targets named item_test
@@ -136,28 +162,16 @@ item_test/fast:
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/build
 .PHONY : item_test/fast
 
-#=============================================================================
-# Target rules for targets named auction_engine
-
-# Build rule for target.
-auction_engine: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 auction_engine
-.PHONY : auction_engine
-
-# fast build rule for target.
-auction_engine/fast:
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/build
-.PHONY : auction_engine/fast
-
 src/auction.o: src/auction.cpp.o
 
 .PHONY : src/auction.o
 
 # target to build an object file
 src/auction.cpp.o:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/auction.cpp.o
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/auction.cpp.o
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/auction.cpp.o
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/auction.cpp.o
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/auction.cpp.o
 .PHONY : src/auction.cpp.o
 
 src/auction.i: src/auction.cpp.i
@@ -166,9 +180,10 @@ src/auction.i: src/auction.cpp.i
 
 # target to preprocess a source file
 src/auction.cpp.i:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/auction.cpp.i
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/auction.cpp.i
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/auction.cpp.i
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/auction.cpp.i
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/auction.cpp.i
 .PHONY : src/auction.cpp.i
 
 src/auction.s: src/auction.cpp.s
@@ -177,37 +192,65 @@ src/auction.s: src/auction.cpp.s
 
 # target to generate assembly for a file
 src/auction.cpp.s:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/auction.cpp.s
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/auction.cpp.s
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/auction.cpp.s
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/auction.cpp.s
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/auction.cpp.s
 .PHONY : src/auction.cpp.s
 
-src/full_test.o: src/full_test.cpp.o
+src/auction_test.o: src/auction_test.cpp.o
 
-.PHONY : src/full_test.o
+.PHONY : src/auction_test.o
 
 # target to build an object file
-src/full_test.cpp.o:
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/full_test.cpp.o
-.PHONY : src/full_test.cpp.o
+src/auction_test.cpp.o:
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/auction_test.cpp.o
+.PHONY : src/auction_test.cpp.o
 
-src/full_test.i: src/full_test.cpp.i
+src/auction_test.i: src/auction_test.cpp.i
 
-.PHONY : src/full_test.i
+.PHONY : src/auction_test.i
 
 # target to preprocess a source file
-src/full_test.cpp.i:
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/full_test.cpp.i
-.PHONY : src/full_test.cpp.i
+src/auction_test.cpp.i:
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/auction_test.cpp.i
+.PHONY : src/auction_test.cpp.i
 
-src/full_test.s: src/full_test.cpp.s
+src/auction_test.s: src/auction_test.cpp.s
 
-.PHONY : src/full_test.s
+.PHONY : src/auction_test.s
 
 # target to generate assembly for a file
-src/full_test.cpp.s:
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/full_test.cpp.s
-.PHONY : src/full_test.cpp.s
+src/auction_test.cpp.s:
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/auction_test.cpp.s
+.PHONY : src/auction_test.cpp.s
+
+src/demo.o: src/demo.cpp.o
+
+.PHONY : src/demo.o
+
+# target to build an object file
+src/demo.cpp.o:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/demo.cpp.o
+.PHONY : src/demo.cpp.o
+
+src/demo.i: src/demo.cpp.i
+
+.PHONY : src/demo.i
+
+# target to preprocess a source file
+src/demo.cpp.i:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/demo.cpp.i
+.PHONY : src/demo.cpp.i
+
+src/demo.s: src/demo.cpp.s
+
+.PHONY : src/demo.s
+
+# target to generate assembly for a file
+src/demo.cpp.s:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/demo.cpp.s
+.PHONY : src/demo.cpp.s
 
 src/item.o: src/item.cpp.o
 
@@ -215,9 +258,10 @@ src/item.o: src/item.cpp.o
 
 # target to build an object file
 src/item.cpp.o:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/item.cpp.o
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/item.cpp.o
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/item.cpp.o
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/item.cpp.o
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/item.cpp.o
 .PHONY : src/item.cpp.o
 
 src/item.i: src/item.cpp.i
@@ -226,9 +270,10 @@ src/item.i: src/item.cpp.i
 
 # target to preprocess a source file
 src/item.cpp.i:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/item.cpp.i
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/item.cpp.i
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/item.cpp.i
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/item.cpp.i
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/item.cpp.i
 .PHONY : src/item.cpp.i
 
 src/item.s: src/item.cpp.s
@@ -237,9 +282,10 @@ src/item.s: src/item.cpp.s
 
 # target to generate assembly for a file
 src/item.cpp.s:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/item.cpp.s
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/item.cpp.s
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/item.cpp.s
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/item.cpp.s
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/item.cpp.s
 .PHONY : src/item.cpp.s
 
 src/item_test.o: src/item_test.cpp.o
@@ -275,9 +321,10 @@ src/print.o: src/print.cpp.o
 
 # target to build an object file
 src/print.cpp.o:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/print.cpp.o
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/print.cpp.o
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/print.cpp.o
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/print.cpp.o
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/print.cpp.o
 .PHONY : src/print.cpp.o
 
 src/print.i: src/print.cpp.i
@@ -286,9 +333,10 @@ src/print.i: src/print.cpp.i
 
 # target to preprocess a source file
 src/print.cpp.i:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/print.cpp.i
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/print.cpp.i
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/print.cpp.i
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/print.cpp.i
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/print.cpp.i
 .PHONY : src/print.cpp.i
 
 src/print.s: src/print.cpp.s
@@ -297,9 +345,10 @@ src/print.s: src/print.cpp.s
 
 # target to generate assembly for a file
 src/print.cpp.s:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/print.cpp.s
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/print.cpp.s
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/print.cpp.s
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/print.cpp.s
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/print.cpp.s
 .PHONY : src/print.cpp.s
 
 src/status.o: src/status.cpp.o
@@ -308,9 +357,10 @@ src/status.o: src/status.cpp.o
 
 # target to build an object file
 src/status.cpp.o:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/status.cpp.o
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/status.cpp.o
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/status.cpp.o
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/status.cpp.o
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/status.cpp.o
 .PHONY : src/status.cpp.o
 
 src/status.i: src/status.cpp.i
@@ -319,9 +369,10 @@ src/status.i: src/status.cpp.i
 
 # target to preprocess a source file
 src/status.cpp.i:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/status.cpp.i
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/status.cpp.i
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/status.cpp.i
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/status.cpp.i
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/status.cpp.i
 .PHONY : src/status.cpp.i
 
 src/status.s: src/status.cpp.s
@@ -330,9 +381,10 @@ src/status.s: src/status.cpp.s
 
 # target to generate assembly for a file
 src/status.cpp.s:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/status.cpp.s
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/status.cpp.s
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/status.cpp.s
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/status.cpp.s
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/status.cpp.s
 .PHONY : src/status.cpp.s
 
 src/user.o: src/user.cpp.o
@@ -341,9 +393,10 @@ src/user.o: src/user.cpp.o
 
 # target to build an object file
 src/user.cpp.o:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/user.cpp.o
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/user.cpp.o
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/user.cpp.o
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/user.cpp.o
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/user.cpp.o
 .PHONY : src/user.cpp.o
 
 src/user.i: src/user.cpp.i
@@ -352,9 +405,10 @@ src/user.i: src/user.cpp.i
 
 # target to preprocess a source file
 src/user.cpp.i:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/user.cpp.i
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/user.cpp.i
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/user.cpp.i
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/user.cpp.i
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/user.cpp.i
 .PHONY : src/user.cpp.i
 
 src/user.s: src/user.cpp.s
@@ -363,9 +417,10 @@ src/user.s: src/user.cpp.s
 
 # target to generate assembly for a file
 src/user.cpp.s:
+	$(MAKE) -f CMakeFiles/demo.dir/build.make CMakeFiles/demo.dir/src/user.cpp.s
 	$(MAKE) -f CMakeFiles/user_test.dir/build.make CMakeFiles/user_test.dir/src/user.cpp.s
+	$(MAKE) -f CMakeFiles/auction_test.dir/build.make CMakeFiles/auction_test.dir/src/user.cpp.s
 	$(MAKE) -f CMakeFiles/item_test.dir/build.make CMakeFiles/item_test.dir/src/user.cpp.s
-	$(MAKE) -f CMakeFiles/auction_engine.dir/build.make CMakeFiles/auction_engine.dir/src/user.cpp.s
 .PHONY : src/user.cpp.s
 
 src/user_test.o: src/user_test.cpp.o
@@ -403,15 +458,19 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... demo"
 	@echo "... user_test"
+	@echo "... auction_test"
 	@echo "... item_test"
-	@echo "... auction_engine"
 	@echo "... src/auction.o"
 	@echo "... src/auction.i"
 	@echo "... src/auction.s"
-	@echo "... src/full_test.o"
-	@echo "... src/full_test.i"
-	@echo "... src/full_test.s"
+	@echo "... src/auction_test.o"
+	@echo "... src/auction_test.i"
+	@echo "... src/auction_test.s"
+	@echo "... src/demo.o"
+	@echo "... src/demo.i"
+	@echo "... src/demo.s"
 	@echo "... src/item.o"
 	@echo "... src/item.i"
 	@echo "... src/item.s"

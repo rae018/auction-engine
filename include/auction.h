@@ -227,6 +227,8 @@ protected:
   std::vector<uint32_t> sold_items;
   /// Users Registered in the auction.
   std::map<uint32_t, std::unique_ptr<User>> users;
+  /// Users that have placed bids for each item
+  std::map<uint32_t, std::vector<uint32_t>> users_for_item;
   /// Counter for assigning item ids.
   uint32_t item_id_counter;
   /// Counter for assigning user ids.

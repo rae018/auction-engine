@@ -47,11 +47,8 @@ int main() {
     auction.addUser(users[i], funds[i]);
   }
   printTestResult(auction.getUsers().size() == 5);
-  /* Print list */
-  // auction_engine::print::printUserList(auction, auction.getUsers());
-  // std::cout << std::endl;
 
-  /* Try getting individual user */
+  /* Try getting individual users */
   printTest("Testing Auction::getUser()...");
   std::vector<uint32_t> user_ids = auction.getUsers();
   const auction_engine::User* alice, *bob, *carol, *dean, *edgar;
@@ -63,31 +60,29 @@ int main() {
   printTestResult(alice->getId() == user_ids[0] &&
                   alice->getTotalFunds() == funds[0] &&
                   alice->getName() == users[0]);
-  // auction_engine::print::printUser(auction, alice->getId());
 
   /* Create and add items */
   printTest("Testing Auction::addItem()...");
-  std::vector<std::string> items = { "Rug", "Sunflowers", "Ficus" };
-  std::vector<uint32_t> starting_values = { 70, 1853, 120 };
+  std::vector<std::string> items = { "Rug", "Sunflowers", "Ficus", 
+                                     "pineapple" };
+  std::vector<uint32_t> starting_values = { 70, 1853, 120, 60 };
   for (int i=0; i<items.size(); ++i) {
     auction.addItem(items[i], starting_values[i]);
   }
-  printTestResult(auction.getItems().size() == 3);
-  /* Print list */
-  // auction_engine::print::printItemList(auction, auction.getItems());
-  // std::cout << std::endl;
+  printTestResult(auction.getItems().size() == 4);
 
-  /* Try getting individual item */
+  /* Try getting individual items */
   printTest("Testing Auction::getItem()...");
   std::vector<uint32_t> item_ids = auction.getItems();
-  const auction_engine::Item* rug, *sunflowers, *ficus;
+  const auction_engine::Item* rug, *sunflowers, *ficus, *pineapple;
   auction.getItem(item_ids[0], rug);
   auction.getItem(item_ids[1], sunflowers);
   auction.getItem(item_ids[2], ficus);
+  auction.getItem(item_ids[3], pineapple);
+
   printTestResult(ficus->getId() == item_ids[2] &&
                   ficus->getName() == items[2] &&
                   ficus->getStartingValue() == starting_values[2]);
-  // auction_engine::print::printItem(auction, ficus->getId());
 
   printTest("Testing Auction::isUserRegistered()...");
   uint32_t max_user_id = user_ids.at(user_ids.size()-1);
@@ -99,103 +94,90 @@ int main() {
   printTestResult(auction.isItemRegistered(max_item_id) && 
                   !auction.isItemRegistered(max_item_id+1));
 
-  /* Start Bidding */
+  /* Try opening an item */
   printTest("Testing Auction::isOpen()...");
   auction.openItem(ficus->getId());
   printTestResult(!auction.isOpen(rug->getId()) &&
                   auction.isOpen(ficus->getId()));
+  /* Open remaining items */
+  auction.openItem(rug->getId());
+  auction.openItem(sunflowers->getId());
+  auction.openItem(pineapple->getId());
 
   auction_engine::Status status = auction.placeBid(
       ficus->getId(), 
       alice->getId(), 
       190);
-  const auction_engine::Bid* cur_bid = ficus->getCurrentBid();
-  if (!status.ok()) std::cout << status.error_message() << std::endl;
   status = auction.placeBid(
       ficus->getId(),
       carol->getId(),
       250);
-  if (!status.ok()) std::cout << status.error_message() << std::endl;
   status = auction.placeBid(
       ficus->getId(),
       bob->getId(),
       300);
-  if (!status.ok()) std::cout << status.error_message() << std::endl;
   status = auction.placeBid(
       ficus->getId(),
       dean->getId(),
       200);
-  if (!status.ok()) std::cout << status.error_message() << std::endl;
   status = auction.placeBid(
       ficus->getId(),
       edgar->getId(),
       200);
-  if (!status.ok()) std::cout << status.error_message() << std::endl;
-  printTest("Testing Auction::placeBid()...");
-  printTestResult(ficus->getBids().size() == 3); 
-  auction_engine::print::printBidList(auction, ficus->getBids());
-
-  /* Make a bunch of bids */
   status = auction.placeBid(
       rug->getId(),
       carol->getId(),
       100);
   status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
+      rug->getId(),
+      bob->getId(),
+      120);
+  status = auction.placeBid(
+      rug->getId(),
+      alice->getId(),
+      150);
+  status = auction.placeBid(
+      rug->getId(),
+      edgar->getId(),
+      180);
+  status = auction.placeBid(
+      sunflowers->getId(),
+      bob->getId(),
+      1900);
+  status = auction.placeBid(
+      sunflowers->getId(),
+      alice->getId(),
+      2000);
+  status = auction.placeBid(
+      rug->getId(),
+      alice->getId(),
       250);
   status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
-      250);
+      rug->getId(),
+      edgar->getId(),
+      280);
   status = auction.placeBid(
-      ficus->getId(),
+      rug->getId(),
       carol->getId(),
-      250);
+      300);
   status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
-      250);
+      sunflowers->getId(),
+      bob->getId(),
+      2048);
   status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
-      250);
+      sunflowers->getId(),
+      alice->getId(),
+      2800);
   status = auction.placeBid(
-      ficus->getId(),
+      pineapple->getId(),
       carol->getId(),
-      250);
-  status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
-      250);
-  status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
-      250);
-  status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
-      250);
-  status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
-      250);
-  status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
-      250);
-  status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
-      250);
-  status = auction.placeBid(
-      ficus->getId(),
-      carol->getId(),
-      250);
+      300);
 
-
-
-
+  printTest("Testing Auction::placeBid()...");
+  printTestResult(rug->getBids().size() == 7 &&
+                  ficus->getBids().size() == 3 &&
+                  sunflowers->getBids().size() == 4 &&
+                  pineapple->getBids().size() == 0);
 
 
   printTest("Testind Auction::sellItem()...");
@@ -205,6 +187,8 @@ int main() {
 
   printTest("Testing Auction::isSold()...");
   printTestResult(auction.isSold(ficus->getId()));
+
+  auction.sellItem(sunflowers->getId());
 
   return 0;
 }

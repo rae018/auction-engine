@@ -28,7 +28,7 @@ limitations under the License.
  * =======================================================================
  *   These functions will only print valid values correctly and do no
  *   error checking whatsoever. If you send it garbage it will print 
- *   garbage or possible crash. 
+ *   garbage or possibly crash. 
  * =======================================================================
  */
 
@@ -104,6 +104,7 @@ void printBidList(const Auction& auction, const std::vector<const Bid*> bids) {
     printEntry(bid->value);
     std::cout << std::endl;
   }
+  printLine(4);
 }
 
 void printItemList(const Auction& auction,
@@ -123,6 +124,7 @@ void printItemList(const Auction& auction,
     auction.isSold(item->getId()) ? printEntry("Yes") : printEntry("No");
     std::cout << std::endl;
   }
+  printLine(4);
 }
 
 void printUserList(const Auction& auction,
@@ -130,10 +132,10 @@ void printUserList(const Auction& auction,
   printEntry("User Name");
   printEntry("User ID");
   printEntry("Total Funds");
-  printEntry("Available Funds");
-  printEntry("Items Bid On");
+  printEntry("Avail. Funds");
+  printEntry("# Items Bid On");
   std::cout << std::endl;
-  printLine(4);
+  printLine(5);
   for (auto const& user_id: user_ids) {
     const User* user;
     auction.getUser(user_id, user);
@@ -144,6 +146,7 @@ void printUserList(const Auction& auction,
     printEntry(user->getItemsBidOn().size());
     std::cout << std::endl;
   }
+  printLine(5);
 }
 }  // namespace print
 }  // namespace auction_engine

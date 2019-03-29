@@ -6,7 +6,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-add_executable(auction_engine
+add_executable(demo
 
   # Header files
   include/auction.h
@@ -20,7 +20,28 @@ add_executable(auction_engine
 
   # Source code files
   src/auction.cpp
-  src/full_test.cpp
+  src/demo.cpp
+  src/item.cpp
+  src/print.cpp
+  src/status.cpp
+  src/user.cpp
+)
+
+add_executable(auction_test
+
+  # Header files
+  include/auction.h
+  include/bid.h
+  include/error.h
+  include/error_codes.h
+  include/item.h
+  include/print.h
+  include/status.h
+  include/user.h
+
+  # Source code files
+  src/auction.cpp
+  src/auction_test.cpp
   src/item.cpp
   src/print.cpp
   src/status.cpp

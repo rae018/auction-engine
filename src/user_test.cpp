@@ -63,7 +63,6 @@ int main() {
   printTest("Testing User::getTotalFunds()...");
   printTestResult(user->getTotalFunds() == funds);
 
-  printTest("Testing User::addItem()...");
   uint32_t item_id = 71;
   std::string item_name = "Ficus";
   uint32_t starting_value = 30;
@@ -72,8 +71,6 @@ int main() {
       item_id,
       item_name,
       starting_value));
-  user->addItem(item_id);
-  printTestResult(user->getItemsBidOn().size() == 1);
 
   printTest("Testing User::addBid()...");
   uint32_t bid_value = 212;

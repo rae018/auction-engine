@@ -25,21 +25,20 @@ limitations under the License.
 #include <algorithm>
 #include <memory>
 #include <stdint.h>
-#include <iostream>
 
 namespace auction_engine {
 
 std::vector<uint32_t> const Auction::getItems() const {
   std::vector<uint32_t> item_id_vec;
-  for (auto it=items.cbegin(); it!=items.cend(); ++it)
-    item_id_vec.push_back(it->first);
+  for (const auto& kv: items)
+    item_id_vec.push_back(kv.first);
   return item_id_vec;
 }
 
 std::vector<uint32_t> const Auction::getUsers() const {
   std::vector<uint32_t> user_id_vec;
-  for (auto it=users.cbegin(); it!=users.cend(); ++it)
-    user_id_vec.push_back(it->first);
+  for (const auto& kv: users)
+    user_id_vec.push_back(kv.first);
   return user_id_vec;
 }
 
@@ -124,9 +123,9 @@ Status Auction::openItem(uint32_t item_id) {
   // Check if item is registered, return NOT_FOUND if not
   if (!isItemRegistered(item_id)) {
     return error::NotFound(
-        "Item \"",
+        "Item ",
         item_id,
-        "\" is not registered in the auction.");
+        " is not registered in the auction.");
   }
 
   const Item* item = items.at(item_id).get();
@@ -166,13 +165,24 @@ Status Auction::sellItem(uint32_t item_id) {
         "Item \"",
         item->getName(),
         "\" has been sold.");
-  } else {
-    auto it = std::upper_bound(sold_items.cbegin(), sold_items.cend(), item_id);
-    sold_items.insert(it, item_id);
-    revenue += item->getCurrentValue();
-    // TODO: subtract winning bid from users total funds
-    // TODO: add losing bids back to users available funds
+  } 
+
+  if (item->getBids().empty()) {
+    return error::NoBid(
+        "No bids have been placed on Item \"",
+        item->getName(),
+        "\".");
   }
+
+  auto it = std::upper_bound(sold_items.cbegin(), sold_items.cend(), item_id);
+  sold_items.insert(it, item_id);
+  revenue += item->getCurrentValue();
+  // TODO: subtract winning bid from users total funds
+  // TODO: add losing bids back to users available funds
+  std::vector<uint32_t> bidding_users = users_for_item.at(item_id);
+  uint32_t winning_user = item->getCurrentBid()->user_id;
+  for (auto it: bidding_users)
+    users[it]->reportBidResult(item_id, it==winning_user);
 
   return Status::OK();
 }
@@ -232,8 +242,16 @@ Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
         "\" is not currently open in the auction.");
   }
 
-  // TODO: it should be their current bid + their available funds
-  if (value > user->getAvailableFunds()) {
+  if (isSold(item_id)) {
+    return error::ItemUnavailable(
+        "Item \"",
+        item->getName(),
+        "\" is already sold.");
+  }
+
+  // The amount the user can bid on this item is what they've already bid plus
+  // their available funds i.e. they can up the bid by their available funds.
+  if (value > user->getAvailableFunds() + user->getBidValueOnItem(item_id)) {
     return error::InsufficientFunds(
         "Attempted bid value ",
         value,
@@ -241,6 +259,9 @@ Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
   }
   
   const uint32_t current_value = item->getCurrentValue();
+  // The new bid must be strictly greater than the current bid, unless no bids 
+  // have been made, in which case it can be greater than or equal to the 
+  // starting value.
   if ((!item->getBids().empty() && value < current_value) ||
       value <= current_value) {
     return error::InvalidBid(
@@ -249,11 +270,16 @@ Status Auction::placeBid(uint32_t item_id, uint32_t user_id, uint32_t value) {
         " is not higher than the current value ",
         current_value, ".");
   }
+
+  // If the user hasn't bid on the item yet, add them to the list.
+  if (!user->getBidValueOnItem(item_id))
+    users_for_item[item_id].push_back(user_id);
+
   const Bid* current_bid = item->getCurrentBid();
   uint16_t bid_number = current_bid ? current_bid->number+1 : 0;
   const Bid* bid = new Bid(value, user_id, item_id, bid_number);
+
   user->addBid(*bid);
-  user->addItem(item_id);
   item->addBid(*bid);
 
   return Status::OK();
