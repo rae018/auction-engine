@@ -13,17 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include <bid.h>
-#include <error.h>
-#include <item.h>
-#include <print.h>
-#include <status.h>
-#include <auction.h>
 #include <string>
 #include <memory>
 #include <user.h>
 #include <iostream>
 #include <iomanip>
+
+#include "bid.h"
+#include "error.h"
+#include "item.h"
+#include "print.h"
+#include "status.h"
+#include "auction.h"
 
 inline void printTest(std::string test) {
   std::cout << std::left << std::setw(48) << std::setfill('.');

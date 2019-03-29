@@ -13,18 +13,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include <bid.h>
-#include <auction.h>
-#include <item.h>
-#include <user.h>
-#include <error.h>
-#include <status.h>
 #include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
 #include <memory>
 #include <stdint.h>
+
+#include "bid.h"
+#include "auction.h"
+#include "item.h"
+#include "user.h"
+#include "error.h"
+#include "status.h"
 
 namespace auction_engine {
 
@@ -177,8 +178,6 @@ Status Auction::sellItem(uint32_t item_id) {
   auto it = std::upper_bound(sold_items.cbegin(), sold_items.cend(), item_id);
   sold_items.insert(it, item_id);
   revenue += item->getCurrentValue();
-  // TODO: subtract winning bid from users total funds
-  // TODO: add losing bids back to users available funds
   std::vector<uint32_t> bidding_users = users_for_item.at(item_id);
   uint32_t winning_user = item->getCurrentBid()->user_id;
   for (auto it: bidding_users)

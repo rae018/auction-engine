@@ -3,20 +3,20 @@ project(auction_engine)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 add_executable(demo
 
   # Header files
-  include/auction.h
-  include/bid.h
-  include/error.h
-  include/error_codes.h
-  include/item.h
-  include/print.h
-  include/status.h
-  include/user.h
+  src/auction.h
+  src/bid.h
+  src/error.h
+  src/error_codes.h
+  src/item.h
+  src/print.h
+  src/status.h
+  src/user.h
 
   # Source code files
   src/auction.cpp
@@ -30,14 +30,14 @@ add_executable(demo
 add_executable(auction_test
 
   # Header files
-  include/auction.h
-  include/bid.h
-  include/error.h
-  include/error_codes.h
-  include/item.h
-  include/print.h
-  include/status.h
-  include/user.h
+  src/auction.h
+  src/bid.h
+  src/error.h
+  src/error_codes.h
+  src/item.h
+  src/print.h
+  src/status.h
+  src/user.h
 
   # Source code files
   src/auction.cpp
@@ -51,14 +51,14 @@ add_executable(auction_test
 add_executable(item_test
 
   # Header files
-  include/bid.h
-  include/auction.h
-  include/error.h
-  include/error_codes.h
-  include/item.h
-  include/print.h
-  include/user.h
-  include/status.h
+  src/bid.h
+  src/auction.h
+  src/error.h
+  src/error_codes.h
+  src/item.h
+  src/print.h
+  src/user.h
+  src/status.h
 
   # Source code files
   src/item.cpp
@@ -72,14 +72,14 @@ add_executable(item_test
 add_executable(user_test
 
   # Header files
-  include/bid.h
-  include/auction.h
-  include/error.h
-  include/error_codes.h
-  include/item.h
-  include/print.h
-  include/user.h
-  include/status.h
+  src/bid.h
+  src/auction.h
+  src/error.h
+  src/error_codes.h
+  src/item.h
+  src/print.h
+  src/user.h
+  src/status.h
 
   # Source code files
   src/item.cpp

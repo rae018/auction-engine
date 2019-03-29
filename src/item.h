@@ -15,11 +15,12 @@ limitations under the License.
 
 # pragma once
 
-#include <bid.h>
-#include <auction.h>
 #include <string>
 #include <vector>
 #include <stdint.h>
+
+#include "bid.h"
+#include "auction.h"
 
 namespace auction_engine {
 
@@ -70,10 +71,15 @@ public:
   void addBid(const Bid& bid) { bids.push_back(&bid); }
 
 protected:
-  const uint32_t id;          ///< Id of item.
-  std::string name;           ///< Name of item.
-  std::vector<const Bid*> bids;     ///< All bids placed on the item.
-  uint32_t starting_value;    ///< Starting value of item.
-  const Auction& auction;     ///< The \c Auction this item is a part of.
+  /// The \c Auction this item is a part of.
+  const Auction& auction;
+  /// Id of item.
+  const uint32_t id;
+  /// Name of item.
+  std::string name;
+  /// All bids placed on the item.
+  std::vector<const Bid*> bids;
+  /// Starting value of item.
+  uint32_t starting_value;
 };
 }  // namespace auction_engine

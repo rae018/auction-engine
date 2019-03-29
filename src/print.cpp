@@ -13,14 +13,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include <bid.h>
-#include <item.h>
-#include <user.h>
 #include <string>
 #include <vector>
 #include <stdint.h>
 #include <iostream>
 #include <iomanip>
+
+#include "bid.h"
+#include "auction.h"
+#include "item.h"
+#include "user.h"
 
 /*
  * =======================================================================

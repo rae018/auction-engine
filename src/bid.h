@@ -15,7 +15,6 @@ limitations under the License.
 
 #pragma once
 
-#include <user.h>
 #include <stdint.h>
 
 namespace auction_engine {

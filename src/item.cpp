@@ -13,9 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include <item.h>
 #include <vector>
 #include <stdint.h>
+
+#include "item.h"
 
 namespace auction_engine {
 

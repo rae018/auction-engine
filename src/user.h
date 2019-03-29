@@ -15,13 +15,14 @@ limitations under the License.
 
 #pragma once
 
-#include <bid.h>
-#include <item.h>
-#include <auction.h>
 #include <string>
 #include <vector>
 #include <stdint.h>
 #include <map>
+
+#include "bid.h"
+#include "item.h"
+#include "auction.h"
 
 namespace auction_engine {
 
@@ -100,6 +101,8 @@ public:
   void reportBidResult(uint32_t item_id, bool won);
 
 protected:
+  /// The \c Auction this user is a part of.
+  const Auction& auction;
   /// Id of user.
   const uint32_t id;
   /// Name of user.
@@ -112,7 +115,5 @@ protected:
   std::map<uint32_t, std::vector<const Bid*>> bids_placed;
   /// The \c Items this user has won.
   std::vector<uint32_t> items_won;
-  /// The \c Auction this user is a part of.
-  const Auction& auction; 
 };
 }  // namespace auction_engine

@@ -15,10 +15,11 @@ limitations under the License.
 
 #pragma once
 
-#include <bid.h>
-#include <item.h>
-#include <user.h>
 #include <vector>
+
+#include "bid.h"
+#include "item.h"
+#include "user.h"
 
 namespace auction_engine {
 namespace print {

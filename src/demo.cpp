@@ -13,16 +13,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include <auction.h>
-#include <bid.h>
-#include <error.h>
-#include <item.h>
-#include <print.h>
-#include <status.h>
-#include <user.h>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+
+#include "auction.h"
+#include "bid.h"
+#include "error.h"
+#include "item.h"
+#include "print.h"
+#include "status.h"
+#include "user.h"
 
 int main() {
   /* Create Auction instance */
@@ -82,7 +83,6 @@ int main() {
       ficus->getId(), 
       alice->getId(), 
       190);
-  const auction_engine::Bid* cur_bid = ficus->getCurrentBid();
   if (!status.ok()) {
     std::cout << "ERROR: " << status.error_message();
     std::cout << std::endl << std::endl;

@@ -13,12 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#include <bid.h>
-#include <item.h>
-#include <user.h>
 #include <vector>
 #include <stdint.h>
 #include <map>
+
+#include "bid.h"
+#include "item.h"
+#include "user.h"
 
 namespace auction_engine {
 
@@ -44,11 +45,14 @@ uint32_t User::getBidValueOnItem(uint32_t item_id) const {
 }
 
 void User::addBid(const Bid& bid) {
-  if (bids_placed.count(item_id))
-    available_funds = available_funds - bid_value + 
-                      bids_placed[item_id].back()->value
+  if (bids_placed.count(bid.item_id)) {
+    available_funds = available_funds - bid.value + \
+                      bids_placed[bid.item_id].back()->value;
+  } else {
+    available_funds -= bid.value;
+  }
+
   bids_placed[bid.item_id].push_back(&bid);
-  available_funds -= bid.value;
 }
 
 void User::reportBidResult(uint32_t item_id, bool won) {
