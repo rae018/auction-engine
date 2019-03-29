@@ -51,7 +51,6 @@ void User::addBid(const Bid& bid) {
   } else {
     available_funds -= bid.value;
   }
-
   bids_placed[bid.item_id].push_back(&bid);
 }
 

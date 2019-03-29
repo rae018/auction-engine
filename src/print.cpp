@@ -30,7 +30,7 @@ limitations under the License.
  * =======================================================================
  *   These functions will only print valid values correctly and do no
  *   error checking whatsoever. If you send it garbage it will print 
- *   garbage or possibly crash. 
+ *   garbage. 
  * =======================================================================
  */
 

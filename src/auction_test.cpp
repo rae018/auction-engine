@@ -33,7 +33,6 @@ inline void printTestResult(bool result) {
   if (result) std::cout << "PASSED";                                                
   else std::cout << "FAILED";                                                       
   std::cout << std::endl;                                                           
-                                                                                    
 } 
 
 int main() {
@@ -179,7 +178,6 @@ int main() {
                   ficus->getBids().size() == 3 &&
                   sunflowers->getBids().size() == 4 &&
                   pineapple->getBids().size() == 0);
-
 
   printTest("Testind Auction::sellItem()...");
   auction.sellItem(ficus->getId());

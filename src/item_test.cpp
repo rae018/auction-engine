@@ -33,7 +33,6 @@ inline void printTestResult(bool result) {
   if (result) std::cout << "PASSED";
   else std::cout << "FAILED";
   std::cout << std::endl;
-
 }
 
 int main() {

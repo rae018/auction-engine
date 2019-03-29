@@ -34,7 +34,6 @@ inline void printTestResult(bool result) {
   if (result) std::cout << "PASSED";
   else std::cout << "FAILED";
   std::cout << std::endl;
-
 }
 
 int main() {
@@ -79,7 +78,6 @@ int main() {
   const auction_engine::Bid bid(bid_value, user_id, item_id, bid_number);
   user->addBid(bid);
   printTestResult(user->getBids().size() == 1);
-
 
   return 0;
 }

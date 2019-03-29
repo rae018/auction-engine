@@ -143,7 +143,6 @@ Status Auction::openItem(uint32_t item_id) {
   if (!isOpen(item_id)) {
     auto it = std::upper_bound(open_items.cbegin(), open_items.cend(), item_id);
     open_items.insert(it, item_id);
-
   }
 
   return Status::OK();
