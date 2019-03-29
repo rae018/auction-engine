@@ -26,7 +26,7 @@ A users available funds are calculated as their total funds minus their highest 
 For the full API and feature list, see the Doxygen pages linked above and view the test/demo files for example uses.
 
 ### Building and Requirements
-This project can be built using Bazel or CMake. **It must be compiled with C++14 using the -std=c++14 flag.** This is already taken care of in CMakeLists.txt but must be manually specified for Bazel. 
+This project can be built using Bazel or CMake. **It must be compiled with C++14 using the -std=c++14 flag.** This is already taken care of in CMakeLists.txt but must be manually specified for Bazel. The available executables are `demo`, `auction_test`, `user_test`, and `item_test`.
 
 ##### CMake
 Navigate to the `/build` directory and run `cmake ..` and then `make`. This will build all executables. For example to run the demo run `./demo`.

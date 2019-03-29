@@ -97,7 +97,20 @@ public:
    *    The bid to add.
    */
   void addBid(const Bid& bid);
-
+  
+  /**
+   * \breif Reports a bid result to the user and does necessary maintenance.
+   *
+   * If the user has won the item, their winnind bid value is subtracted from
+   * their total funds. If the lost the item, their highest bid on the item is
+   * added back to their available funds.
+   *
+   * \param item_id
+   *    The \c Item that has been sold.
+   *
+   * \param won
+   *    Whether the user has won the item.
+   */
   void reportBidResult(uint32_t item_id, bool won);
 
 protected:
